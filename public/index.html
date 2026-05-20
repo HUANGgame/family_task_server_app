@@ -17,17 +17,12 @@
       --green: #328158;
       --red: #b84f47;
       --soft: #eef5f2;
+      --ad: #f7f0df;
       --shadow: 0 10px 28px rgba(28, 46, 39, 0.1);
     }
 
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--ink);
-      font-family: "Microsoft JhengHei", "Noto Sans TC", Arial, sans-serif;
-    }
+    body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink); font-family: "Microsoft JhengHei", "Noto Sans TC", Arial, sans-serif; }
     header { background: #173f45; color: white; padding: 22px 5vw; }
     .header-inner, .shell { width: min(1120px, 92vw); margin: 0 auto; }
     .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
@@ -38,50 +33,18 @@
     header p { margin-bottom: 0; color: rgba(255,255,255,.78); }
     .shell { margin-top: 20px; margin-bottom: 42px; }
     .topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .segmented {
-      display: inline-grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4px;
-      padding: 4px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #eef2ec;
-    }
+    .segmented { display: inline-grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 8px; background: #eef2ec; }
     .grid { display: grid; grid-template-columns: 320px 1fr; gap: 16px; align-items: start; }
     .two-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
-    .panel, .item, .task {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      box-shadow: var(--shadow);
-    }
+    .panel, .item, .task { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow); }
     .panel { padding: 18px; }
     .item, .task { padding: 14px; box-shadow: none; }
     .stack { display: grid; gap: 12px; }
     .hidden { display: none !important; }
     label { display: block; margin: 12px 0 6px; font-size: 14px; font-weight: 800; }
-    input, textarea, select {
-      width: 100%;
-      min-height: 42px;
-      border: 1px solid #cbd5cf;
-      border-radius: 8px;
-      padding: 10px 11px;
-      background: white;
-      color: var(--ink);
-      font: inherit;
-    }
+    input, textarea, select { width: 100%; min-height: 42px; border: 1px solid #cbd5cf; border-radius: 8px; padding: 10px 11px; background: white; color: var(--ink); font: inherit; }
     textarea { min-height: 76px; resize: vertical; }
-    button {
-      min-height: 40px;
-      border: 0;
-      border-radius: 8px;
-      padding: 9px 14px;
-      background: var(--primary);
-      color: white;
-      font: inherit;
-      font-weight: 800;
-      cursor: pointer;
-    }
+    button { min-height: 40px; border: 0; border-radius: 8px; padding: 9px 14px; background: var(--primary); color: white; font: inherit; font-weight: 800; cursor: pointer; }
     button:hover { background: var(--primary-dark); }
     button:disabled { cursor: not-allowed; opacity: .55; }
     .btn-light { border: 1px solid var(--line); background: white; color: var(--primary); }
@@ -98,62 +61,21 @@
     .child-button { width: 100%; text-align: left; border: 1px solid var(--line); background: #fbfcfa; color: var(--ink); }
     .child-button.active, .child-button:hover { border-color: var(--primary); background: var(--soft); }
     .metric { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
-    .metric-box {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 12px;
-      background: #fafcf8;
-      text-align: center;
-      color: var(--muted);
-    }
+    .metric-box { border: 1px solid var(--line); border-radius: 8px; padding: 12px; background: #fafcf8; text-align: center; color: var(--muted); }
     .metric-box b { display: block; margin-bottom: 4px; color: var(--primary); font-size: 28px; line-height: 1; }
-    .points, .status {
-      display: inline-flex;
-      align-items: center;
-      border-radius: 999px;
-      padding: 4px 10px;
-      background: #fff3d7;
-      color: #78510c;
-      font-size: 13px;
-      font-weight: 900;
-    }
+    .points, .status { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 10px; background: #fff3d7; color: #78510c; font-size: 13px; font-weight: 900; }
     .status.done { background: #dff3e6; color: #276846; }
-    .fine-tag { background: #fde5e1; color: #8f352e; }
     .task { display: grid; gap: 9px; margin-top: 12px; }
     .task.done { background: #f4fbf6; border-color: #b9dcc6; }
     .task-title, .item-title { font-size: 17px; font-weight: 900; overflow-wrap: anywhere; }
     .task p, .item p { margin: 0; color: var(--muted); line-height: 1.55; overflow-wrap: anywhere; }
     .photo { width: 100%; max-height: 260px; object-fit: cover; border: 1px solid var(--line); border-radius: 8px; }
-    .empty {
-      border: 1px dashed #c9d3cb;
-      border-radius: 8px;
-      padding: 14px;
-      background: #fbfcfa;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-    .hero-points {
-      border-radius: 8px;
-      padding: 20px;
-      background: #fff7e6;
-      border: 1px solid #f1d18a;
-      color: #6d4a0b;
-    }
+    .empty { border: 1px dashed #c9d3cb; border-radius: 8px; padding: 14px; background: #fbfcfa; color: var(--muted); line-height: 1.55; }
+    .hero-points { border-radius: 8px; padding: 20px; background: #fff7e6; border: 1px solid #f1d18a; color: #6d4a0b; }
     .hero-points b { display: block; margin-top: 4px; font-size: 40px; line-height: 1; color: var(--gold); }
-    .toast {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      max-width: min(360px, calc(100vw - 36px));
-      display: none;
-      border-radius: 8px;
-      padding: 12px 14px;
-      background: #173f45;
-      color: white;
-      box-shadow: var(--shadow);
-      z-index: 30;
-      line-height: 1.5;
-    }
+    .sponsor { border: 1px solid #ead8aa; background: var(--ad); box-shadow: none; }
+    .sponsor small { display: block; margin-bottom: 6px; color: #7a5b12; font-weight: 800; }
+    .toast { position: fixed; right: 18px; bottom: 18px; max-width: min(360px, calc(100vw - 36px)); display: none; border-radius: 8px; padding: 12px 14px; background: #173f45; color: white; box-shadow: var(--shadow); z-index: 30; line-height: 1.5; }
     @media (max-width: 900px) {
       .header-inner, .topbar { align-items: stretch; flex-direction: column; }
       .grid, .two-grid, .metric { grid-template-columns: 1fr; }
@@ -167,7 +89,7 @@
     <div class="header-inner">
       <div>
         <h1>家庭任務積分</h1>
-        <p>完成任務拿積分，表現不佳也能記罰單。</p>
+        <p>任務、獎勵、罰單與商店，放在一個簡單介面。</p>
       </div>
       <button id="refreshBtn" class="btn-light" type="button">重新整理</button>
     </div>
@@ -185,7 +107,7 @@
     <section id="managerPage">
       <div id="managerLoginPanel" class="panel">
         <h2>家長登入</h2>
-        <p id="managerLoginHint" class="muted">第一次使用請設定家長名稱與密碼。</p>
+        <p id="managerLoginHint" class="muted">第一次使用請設定家長名稱、密碼與忘記密碼驗證答案。</p>
         <div class="two-grid">
           <div>
             <label for="managerNameInput">家長名稱</label>
@@ -196,7 +118,35 @@
             <input id="managerPasswordInput" type="password" placeholder="至少 4 碼">
           </div>
         </div>
-        <button id="managerLoginBtn" type="button" style="margin-top: 12px;">進入家長介面</button>
+        <div id="firstSetupRecovery">
+          <label for="recoveryAnswerInput">忘記密碼驗證答案</label>
+          <input id="recoveryAnswerInput" type="text" maxlength="80" placeholder="只有家長知道的答案">
+        </div>
+        <div class="row" style="margin-top: 12px;">
+          <button id="managerLoginBtn" type="button">進入家長介面</button>
+          <button id="showResetBtn" class="btn-light" type="button">忘記密碼</button>
+        </div>
+      </div>
+
+      <div id="resetPasswordPanel" class="panel hidden" style="margin-top: 16px;">
+        <h2>重設家長密碼</h2>
+        <p class="muted">輸入家長名稱與驗證答案後，可以設定新密碼。</p>
+        <div class="two-grid">
+          <div>
+            <label for="resetNameInput">家長名稱</label>
+            <input id="resetNameInput" type="text" maxlength="120">
+          </div>
+          <div>
+            <label for="resetAnswerInput">驗證答案</label>
+            <input id="resetAnswerInput" type="text" maxlength="80">
+          </div>
+        </div>
+        <label for="resetPasswordInput">新密碼</label>
+        <input id="resetPasswordInput" type="password" placeholder="至少 4 碼">
+        <div class="row" style="margin-top: 12px;">
+          <button id="resetPasswordBtn" type="button">更新密碼</button>
+          <button id="hideResetBtn" class="btn-light" type="button">取消</button>
+        </div>
       </div>
 
       <div id="managerDashboard" class="hidden">
@@ -211,6 +161,7 @@
             <button id="addChildBtn" type="button" style="margin-top: 10px;">新增</button>
             <div class="divider"></div>
             <div id="childListForManager" class="stack"></div>
+            <div id="managerSponsorBox" class="item sponsor hidden" style="margin-top: 16px;"></div>
           </aside>
 
           <section class="stack">
@@ -219,14 +170,12 @@
                 <h2 id="selectedChildTitle">選擇孩子</h2>
                 <button id="deleteChildBtn" class="btn-red hidden" type="button">刪除孩子</button>
               </div>
-
               <div id="managerWorkArea" class="hidden">
                 <div class="metric">
                   <div class="metric-box"><b id="childPointCount">0</b>目前積分</div>
                   <div class="metric-box"><b id="totalCount">0</b>任務</div>
                   <div class="metric-box"><b id="fineCount">0</b>罰單</div>
                 </div>
-
                 <div class="two-grid">
                   <div>
                     <h3>派任務</h3>
@@ -243,7 +192,6 @@
                     </select>
                     <button id="sendTaskBtn" type="button" style="margin-top: 12px;">送出任務</button>
                   </div>
-
                   <div>
                     <h3>開罰單</h3>
                     <label for="finePointsInput">扣幾分</label>
@@ -253,7 +201,6 @@
                     <button id="addFineBtn" class="btn-red" type="button" style="margin-top: 12px;">直接扣分</button>
                   </div>
                 </div>
-
                 <div class="divider"></div>
                 <div class="two-grid">
                   <div>
@@ -293,6 +240,33 @@
               </div>
             </div>
 
+            <div class="two-grid">
+              <div class="panel">
+                <h2>商業設定</h2>
+                <label for="adsEnabledSelect">贊助版位</label>
+                <select id="adsEnabledSelect">
+                  <option value="no">關閉</option>
+                  <option value="yes">開啟</option>
+                </select>
+                <label for="sponsorNameInput">贊助名稱</label>
+                <input id="sponsorNameInput" type="text" maxlength="120" placeholder="例如：家庭好物推薦">
+                <label for="sponsorTextInput">贊助文字</label>
+                <textarea id="sponsorTextInput" maxlength="500" placeholder="短短一句，不干擾使用"></textarea>
+                <label for="sponsorUrlInput">連結</label>
+                <input id="sponsorUrlInput" type="url" maxlength="300" placeholder="https://">
+                <button id="saveMonetizationBtn" type="button" style="margin-top: 12px;">儲存商業設定</button>
+              </div>
+              <div class="panel">
+                <h2>獲利數據</h2>
+                <div class="metric">
+                  <div class="metric-box"><b id="adImpressionsText">0</b>曝光</div>
+                  <div class="metric-box"><b id="adClicksText">0</b>點擊</div>
+                  <div class="metric-box"><b id="adStatusText">關</b>狀態</div>
+                </div>
+                <p class="muted">版位只出現在側欄與底部，不使用彈窗、不遮任務、不自動跳轉。</p>
+              </div>
+            </div>
+
             <div class="panel">
               <h2>兌換紀錄</h2>
               <div id="redemptionList" class="stack"></div>
@@ -313,8 +287,8 @@
             目前積分
             <b id="childPointText">0</b>
           </div>
+          <div id="childSponsorBox" class="item sponsor hidden" style="margin-top: 16px;"></div>
         </aside>
-
         <section class="stack">
           <div class="panel">
             <h2 id="childTitle">我的任務</h2>
@@ -336,7 +310,7 @@
   <div id="toast" class="toast" role="status"></div>
 
   <script>
-    let appData = { managerName: "", hasManagerPassword: false, children: [], shop: [], redemptions: [], fines: [] };
+    let appData = { managerName: "", hasManagerPassword: false, hasRecoveryAnswer: false, children: [], shop: [], redemptions: [], fines: [], monetization: {} };
     let managerPassword = sessionStorage.getItem("managerPassword") || "";
     let managerUnlocked = Boolean(managerPassword);
     let selectedChildId = "";
@@ -344,62 +318,16 @@
     let toastTimer = null;
 
     const $ = id => document.getElementById(id);
-    const managerModeBtn = $("managerModeBtn");
-    const childModeBtn = $("childModeBtn");
-    const managerPage = $("managerPage");
-    const childPage = $("childPage");
-    const refreshBtn = $("refreshBtn");
-    const lastUpdatedText = $("lastUpdatedText");
-    const managerLoginPanel = $("managerLoginPanel");
-    const managerDashboard = $("managerDashboard");
-    const managerLoginHint = $("managerLoginHint");
-    const managerNameInput = $("managerNameInput");
-    const managerPasswordInput = $("managerPasswordInput");
-    const managerLoginBtn = $("managerLoginBtn");
-    const managerLogoutBtn = $("managerLogoutBtn");
-    const childNameInput = $("childNameInput");
-    const addChildBtn = $("addChildBtn");
-    const childListForManager = $("childListForManager");
-    const deleteChildBtn = $("deleteChildBtn");
-    const selectedChildTitle = $("selectedChildTitle");
-    const managerWorkArea = $("managerWorkArea");
-    const childPointCount = $("childPointCount");
-    const totalCount = $("totalCount");
-    const fineCount = $("fineCount");
-    const taskNameInput = $("taskNameInput");
-    const taskPointsInput = $("taskPointsInput");
-    const taskNoteInput = $("taskNoteInput");
-    const needPhotoSelect = $("needPhotoSelect");
-    const sendTaskBtn = $("sendTaskBtn");
-    const managerTaskList = $("managerTaskList");
-    const finePointsInput = $("finePointsInput");
-    const fineReasonInput = $("fineReasonInput");
-    const addFineBtn = $("addFineBtn");
-    const managerFineList = $("managerFineList");
-    const shopNameInput = $("shopNameInput");
-    const shopCostInput = $("shopCostInput");
-    const shopStockInput = $("shopStockInput");
-    const shopDescriptionInput = $("shopDescriptionInput");
-    const addShopItemBtn = $("addShopItemBtn");
-    const managerShopList = $("managerShopList");
-    const redemptionList = $("redemptionList");
-    const childLoginSelect = $("childLoginSelect");
-    const childLoginBtn = $("childLoginBtn");
-    const childPointBox = $("childPointBox");
-    const childPointText = $("childPointText");
-    const childTitle = $("childTitle");
-    const childTaskList = $("childTaskList");
-    const childFineList = $("childFineList");
-    const childShopList = $("childShopList");
-    const toast = $("toast");
+    const ids = [
+      "managerModeBtn","childModeBtn","managerPage","childPage","refreshBtn","lastUpdatedText","managerLoginPanel","resetPasswordPanel","managerDashboard","managerLoginHint","managerNameInput","managerPasswordInput","recoveryAnswerInput","firstSetupRecovery","managerLoginBtn","showResetBtn","hideResetBtn","resetNameInput","resetAnswerInput","resetPasswordInput","resetPasswordBtn","managerLogoutBtn","childNameInput","addChildBtn","childListForManager","deleteChildBtn","selectedChildTitle","managerWorkArea","childPointCount","totalCount","fineCount","taskNameInput","taskPointsInput","taskNoteInput","needPhotoSelect","sendTaskBtn","managerTaskList","finePointsInput","fineReasonInput","addFineBtn","managerFineList","shopNameInput","shopCostInput","shopStockInput","shopDescriptionInput","addShopItemBtn","managerShopList","redemptionList","adsEnabledSelect","sponsorNameInput","sponsorTextInput","sponsorUrlInput","saveMonetizationBtn","adImpressionsText","adClicksText","adStatusText","managerSponsorBox","childLoginSelect","childLoginBtn","childPointBox","childPointText","childTitle","childTaskList","childFineList","childShopList","childSponsorBox","toast"
+    ];
+    const el = Object.fromEntries(ids.map(id => [id, $(id)]));
 
     function showToast(message) {
-      toast.textContent = message;
-      toast.style.display = "block";
+      el.toast.textContent = message;
+      el.toast.style.display = "block";
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        toast.style.display = "none";
-      }, 2600);
+      toastTimer = setTimeout(() => { el.toast.style.display = "none"; }, 2600);
     }
 
     async function api(url, options = {}) {
@@ -417,43 +345,31 @@
         if (selectedChildId && !appData.children.some(child => child.id === selectedChildId)) selectedChildId = "";
         if (currentChildId && !appData.children.some(child => child.id === currentChildId)) currentChildId = "";
         renderAll();
-        lastUpdatedText.textContent = `已同步 ${new Date().toLocaleTimeString("zh-TW", { hour: "2-digit", minute: "2-digit" })}`;
+        el.lastUpdatedText.textContent = `已同步 ${new Date().toLocaleTimeString("zh-TW", { hour: "2-digit", minute: "2-digit" })}`;
       } catch (error) {
         if (!quiet) showToast(error.message);
       }
     }
 
-    function empty(node) {
-      while (node.firstChild) node.removeChild(node.firstChild);
-    }
-
+    function empty(node) { while (node.firstChild) node.removeChild(node.firstChild); }
     function textNode(tag, className, value) {
       const node = document.createElement(tag);
       if (className) node.className = className;
       node.textContent = value;
       return node;
     }
-
-    function getSelectedChild() {
-      return appData.children.find(child => child.id === selectedChildId);
-    }
-
-    function getCurrentChild() {
-      return appData.children.find(child => child.id === currentChildId);
-    }
-
-    function finesForChild(childId) {
-      return appData.fines.filter(fine => fine.childId === childId);
-    }
+    function getSelectedChild() { return appData.children.find(child => child.id === selectedChildId); }
+    function getCurrentChild() { return appData.children.find(child => child.id === currentChildId); }
+    function finesForChild(childId) { return appData.fines.filter(fine => fine.childId === childId); }
 
     function switchMode(mode) {
       const manager = mode === "manager";
-      managerPage.classList.toggle("hidden", !manager);
-      childPage.classList.toggle("hidden", manager);
-      managerModeBtn.classList.toggle("active-btn", manager);
-      managerModeBtn.classList.toggle("btn-light", !manager);
-      childModeBtn.classList.toggle("active-btn", !manager);
-      childModeBtn.classList.toggle("btn-light", manager);
+      el.managerPage.classList.toggle("hidden", !manager);
+      el.childPage.classList.toggle("hidden", manager);
+      el.managerModeBtn.classList.toggle("active-btn", manager);
+      el.managerModeBtn.classList.toggle("btn-light", !manager);
+      el.childModeBtn.classList.toggle("active-btn", !manager);
+      el.childModeBtn.classList.toggle("btn-light", manager);
       renderAll();
     }
 
@@ -463,24 +379,25 @@
       renderManagerWorkArea();
       renderManagerShop();
       renderRedemptions();
+      renderMonetization();
       renderChildOptions();
       renderChildView();
+      renderSponsorBoxes();
     }
 
     function renderManagerGate() {
-      managerLoginHint.textContent = appData.hasManagerPassword
-        ? "請輸入家長密碼。"
-        : "第一次使用請設定家長名稱與至少 4 碼密碼。";
-      managerNameInput.value = appData.managerName || managerNameInput.value;
-      managerNameInput.disabled = appData.hasManagerPassword && managerUnlocked;
-      managerLoginPanel.classList.toggle("hidden", managerUnlocked);
-      managerDashboard.classList.toggle("hidden", !managerUnlocked);
+      el.managerLoginHint.textContent = appData.hasManagerPassword ? "請輸入家長密碼。" : "第一次使用請設定家長名稱、密碼與忘記密碼驗證答案。";
+      el.managerNameInput.value = appData.managerName || el.managerNameInput.value;
+      el.managerNameInput.disabled = appData.hasManagerPassword && managerUnlocked;
+      el.firstSetupRecovery.classList.toggle("hidden", appData.hasManagerPassword);
+      el.managerLoginPanel.classList.toggle("hidden", managerUnlocked);
+      el.managerDashboard.classList.toggle("hidden", !managerUnlocked);
     }
 
     function renderChildrenForManager() {
-      empty(childListForManager);
+      empty(el.childListForManager);
       if (!appData.children.length) {
-        childListForManager.appendChild(textNode("div", "empty", "還沒有孩子"));
+        el.childListForManager.appendChild(textNode("div", "empty", "還沒有孩子"));
         return;
       }
       appData.children.forEach(child => {
@@ -491,37 +408,30 @@
         button.className = child.id === selectedChildId ? "child-button active" : "child-button";
         button.appendChild(textNode("div", "task-title", child.name));
         button.appendChild(textNode("div", "muted", `${child.points} 分 · 任務 ${child.tasks.length} · 完成 ${done} · 罰單 ${fines}`));
-        button.addEventListener("click", () => {
-          selectedChildId = child.id;
-          renderAll();
-        });
-        childListForManager.appendChild(button);
+        button.addEventListener("click", () => { selectedChildId = child.id; renderAll(); });
+        el.childListForManager.appendChild(button);
       });
     }
 
     function renderManagerWorkArea() {
       const child = getSelectedChild();
       if (!child) {
-        selectedChildTitle.textContent = "選擇孩子";
-        managerWorkArea.classList.add("hidden");
-        deleteChildBtn.classList.add("hidden");
+        el.selectedChildTitle.textContent = "選擇孩子";
+        el.managerWorkArea.classList.add("hidden");
+        el.deleteChildBtn.classList.add("hidden");
         return;
       }
       const fines = finesForChild(child.id);
-      selectedChildTitle.textContent = child.name;
-      managerWorkArea.classList.remove("hidden");
-      deleteChildBtn.classList.remove("hidden");
-      childPointCount.textContent = child.points;
-      totalCount.textContent = child.tasks.length;
-      fineCount.textContent = fines.length;
-
-      empty(managerTaskList);
-      if (!child.tasks.length) {
-        managerTaskList.appendChild(textNode("div", "empty", "目前沒有任務"));
-      } else {
-        child.tasks.forEach(task => managerTaskList.appendChild(taskCard(child, task, "manager")));
-      }
-      renderFineList(managerFineList, fines);
+      el.selectedChildTitle.textContent = child.name;
+      el.managerWorkArea.classList.remove("hidden");
+      el.deleteChildBtn.classList.remove("hidden");
+      el.childPointCount.textContent = child.points;
+      el.totalCount.textContent = child.tasks.length;
+      el.fineCount.textContent = fines.length;
+      empty(el.managerTaskList);
+      if (!child.tasks.length) el.managerTaskList.appendChild(textNode("div", "empty", "目前沒有任務"));
+      else child.tasks.forEach(task => el.managerTaskList.appendChild(taskCard(child, task, "manager")));
+      renderFineList(el.managerFineList, fines);
     }
 
     function renderFineList(container, fines) {
@@ -541,9 +451,9 @@
     }
 
     function renderManagerShop() {
-      empty(managerShopList);
+      empty(el.managerShopList);
       if (!appData.shop.length) {
-        managerShopList.appendChild(textNode("div", "empty", "尚未上架商品"));
+        el.managerShopList.appendChild(textNode("div", "empty", "尚未上架商品"));
         return;
       }
       appData.shop.forEach(item => {
@@ -562,14 +472,14 @@
         btn.textContent = "下架";
         btn.addEventListener("click", () => runAction(() => api(`/api/shop/${item.id}`, { method: "DELETE" }), "商品已下架"));
         card.appendChild(btn);
-        managerShopList.appendChild(card);
+        el.managerShopList.appendChild(card);
       });
     }
 
     function renderRedemptions() {
-      empty(redemptionList);
+      empty(el.redemptionList);
       if (!appData.redemptions.length) {
-        redemptionList.appendChild(textNode("div", "empty", "還沒有兌換紀錄"));
+        el.redemptionList.appendChild(textNode("div", "empty", "還沒有兌換紀錄"));
         return;
       }
       appData.redemptions.forEach(record => {
@@ -577,61 +487,88 @@
         item.className = "item";
         item.appendChild(textNode("div", "item-title", `${record.childName} 兌換 ${record.itemName}`));
         item.appendChild(textNode("p", "", `${record.cost} 分 · ${record.createdAt}`));
-        redemptionList.appendChild(item);
+        el.redemptionList.appendChild(item);
+      });
+    }
+
+    function renderMonetization() {
+      const m = appData.monetization || {};
+      el.adsEnabledSelect.value = m.adsEnabled ? "yes" : "no";
+      el.sponsorNameInput.value = m.sponsorName || "";
+      el.sponsorTextInput.value = m.sponsorText || "";
+      el.sponsorUrlInput.value = m.sponsorUrl || "";
+      el.adImpressionsText.textContent = m.impressions || 0;
+      el.adClicksText.textContent = m.clicks || 0;
+      el.adStatusText.textContent = m.adsEnabled ? "開" : "關";
+    }
+
+    function renderSponsorBoxes() {
+      const m = appData.monetization || {};
+      const visible = Boolean(m.adsEnabled && (m.sponsorName || m.sponsorText));
+      [el.managerSponsorBox, el.childSponsorBox].forEach(box => {
+        empty(box);
+        box.classList.toggle("hidden", !visible);
+        if (!visible) return;
+        box.appendChild(textNode("small", "", "贊助"));
+        box.appendChild(textNode("div", "item-title", m.sponsorName || "推薦"));
+        box.appendChild(textNode("p", "", m.sponsorText || ""));
+        if (m.sponsorUrl) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "btn-light";
+          btn.textContent = "了解";
+          btn.addEventListener("click", async () => {
+            await fetch("/api/ads/click", { method: "POST" }).catch(() => {});
+            window.open(m.sponsorUrl, "_blank", "noopener");
+          });
+          box.appendChild(btn);
+        }
       });
     }
 
     function renderChildOptions() {
-      empty(childLoginSelect);
+      empty(el.childLoginSelect);
       if (!appData.children.length) {
         const option = document.createElement("option");
         option.value = "";
         option.textContent = "尚未建立孩子";
-        childLoginSelect.appendChild(option);
+        el.childLoginSelect.appendChild(option);
         return;
       }
       appData.children.forEach(child => {
         const option = document.createElement("option");
         option.value = child.id;
         option.textContent = child.name;
-        childLoginSelect.appendChild(option);
+        el.childLoginSelect.appendChild(option);
       });
-      if (currentChildId) childLoginSelect.value = currentChildId;
+      if (currentChildId) el.childLoginSelect.value = currentChildId;
     }
 
     function renderChildView() {
       const child = getCurrentChild();
-      childPointBox.classList.toggle("hidden", !child);
-      empty(childTaskList);
-      empty(childFineList);
-      empty(childShopList);
-
+      el.childPointBox.classList.toggle("hidden", !child);
+      empty(el.childTaskList);
+      empty(el.childFineList);
+      empty(el.childShopList);
       if (!child) {
-        childTitle.textContent = "我的任務";
-        childTaskList.className = "empty";
-        childTaskList.textContent = "請先選擇孩子";
-        childFineList.appendChild(textNode("div", "empty", "請先選擇孩子"));
-        childShopList.appendChild(textNode("div", "empty", "請先選擇孩子"));
+        el.childTitle.textContent = "我的任務";
+        el.childTaskList.className = "empty";
+        el.childTaskList.textContent = "請先選擇孩子";
+        el.childFineList.appendChild(textNode("div", "empty", "請先選擇孩子"));
+        el.childShopList.appendChild(textNode("div", "empty", "請先選擇孩子"));
         return;
       }
-
-      childPointText.textContent = child.points;
-      childTitle.textContent = `${child.name} 的任務`;
-      childTaskList.className = "";
+      el.childPointText.textContent = child.points;
+      el.childTitle.textContent = `${child.name} 的任務`;
+      el.childTaskList.className = "";
       if (!child.tasks.length) {
-        childTaskList.className = "empty";
-        childTaskList.textContent = "目前沒有任務";
-      } else {
-        child.tasks.forEach(task => childTaskList.appendChild(taskCard(child, task, "child")));
-      }
-      renderFineList(childFineList, finesForChild(child.id));
-
+        el.childTaskList.className = "empty";
+        el.childTaskList.textContent = "目前沒有任務";
+      } else child.tasks.forEach(task => el.childTaskList.appendChild(taskCard(child, task, "child")));
+      renderFineList(el.childFineList, finesForChild(child.id));
       const activeShop = appData.shop.filter(item => item.active);
-      if (!activeShop.length) {
-        childShopList.appendChild(textNode("div", "empty", "商店還沒有商品"));
-      } else {
-        activeShop.forEach(item => childShopList.appendChild(shopCardForChild(child, item)));
-      }
+      if (!activeShop.length) el.childShopList.appendChild(textNode("div", "empty", "商店還沒有商品"));
+      else activeShop.forEach(item => el.childShopList.appendChild(shopCardForChild(child, item)));
     }
 
     function taskCard(child, task, mode) {
@@ -653,20 +590,16 @@
         img.alt = `${task.name} 的照片`;
         card.appendChild(img);
       }
-
       if (mode === "manager") {
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "btn-red";
         btn.textContent = "刪除任務";
         btn.addEventListener("click", () => {
-          if (confirm("確定刪除這個任務？")) {
-            runAction(() => api(`/api/children/${child.id}/tasks/${task.id}`, { method: "DELETE" }), "任務已刪除");
-          }
+          if (confirm("確定刪除這個任務？")) runAction(() => api(`/api/children/${child.id}/tasks/${task.id}`, { method: "DELETE" }), "任務已刪除");
         });
         card.appendChild(btn);
       }
-
       if (mode === "child" && !task.done) {
         if (task.needPhoto === "yes") {
           const label = document.createElement("label");
@@ -734,22 +667,22 @@
         const result = await api(`/api/children/${childId}/tasks/${taskId}/finish`, { method: "PUT" });
         await loadData({ quiet: true });
         showToast(`完成任務，得到 ${result.earnedPoints} 分`);
-      } catch (error) {
-        showToast(error.message);
-      }
+      } catch (error) { showToast(error.message); }
     }
 
-    managerLoginBtn.addEventListener("click", async () => {
-      const password = managerPasswordInput.value.trim();
+    el.managerLoginBtn.addEventListener("click", async () => {
+      const password = el.managerPasswordInput.value.trim();
       if (!password) return showToast("請輸入家長密碼");
       try {
         if (!appData.hasManagerPassword) {
-          const managerName = managerNameInput.value.trim();
+          const managerName = el.managerNameInput.value.trim();
+          const recoveryAnswer = el.recoveryAnswerInput.value.trim();
           if (!managerName) throw new Error("請輸入家長名稱");
+          if (!recoveryAnswer) throw new Error("請輸入忘記密碼驗證答案");
           await api("/api/manager", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ managerName, newPassword: password, managerPassword: password })
+            body: JSON.stringify({ managerName, newPassword: password, managerPassword: password, recoveryAnswer })
           });
         } else {
           await api("/api/manager/login", {
@@ -761,27 +694,44 @@
         managerPassword = password;
         sessionStorage.setItem("managerPassword", password);
         managerUnlocked = true;
-        managerPasswordInput.value = "";
+        el.managerPasswordInput.value = "";
         await loadData({ quiet: true });
         showToast("已進入家長介面");
-      } catch (error) {
-        showToast(error.message);
-      }
+      } catch (error) { showToast(error.message); }
     });
 
-    managerLogoutBtn.addEventListener("click", () => {
+    el.showResetBtn.addEventListener("click", () => el.resetPasswordPanel.classList.remove("hidden"));
+    el.hideResetBtn.addEventListener("click", () => el.resetPasswordPanel.classList.add("hidden"));
+    el.resetPasswordBtn.addEventListener("click", async () => {
+      try {
+        await api("/api/manager/reset-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            managerName: el.resetNameInput.value.trim(),
+            recoveryAnswer: el.resetAnswerInput.value.trim(),
+            newPassword: el.resetPasswordInput.value.trim()
+          })
+        });
+        el.resetPasswordPanel.classList.add("hidden");
+        el.resetPasswordInput.value = "";
+        showToast("密碼已更新，請用新密碼登入");
+      } catch (error) { showToast(error.message); }
+    });
+
+    el.managerLogoutBtn.addEventListener("click", () => {
       managerPassword = "";
       managerUnlocked = false;
       sessionStorage.removeItem("managerPassword");
       renderAll();
     });
 
-    managerModeBtn.addEventListener("click", () => switchMode("manager"));
-    childModeBtn.addEventListener("click", () => switchMode("child"));
-    refreshBtn.addEventListener("click", () => loadData());
+    el.managerModeBtn.addEventListener("click", () => switchMode("manager"));
+    el.childModeBtn.addEventListener("click", () => switchMode("child"));
+    el.refreshBtn.addEventListener("click", () => loadData());
 
-    addChildBtn.addEventListener("click", async () => {
-      const name = childNameInput.value.trim();
+    el.addChildBtn.addEventListener("click", async () => {
+      const name = el.childNameInput.value.trim();
       if (!name) return showToast("請輸入孩子名稱");
       try {
         const child = await api("/api/children", {
@@ -791,78 +741,76 @@
         });
         selectedChildId = child.id;
         currentChildId = child.id;
-        childNameInput.value = "";
+        el.childNameInput.value = "";
         await loadData({ quiet: true });
         showToast("孩子已新增");
-      } catch (error) {
-        showToast(error.message);
-      }
+      } catch (error) { showToast(error.message); }
     });
 
-    deleteChildBtn.addEventListener("click", () => {
+    el.deleteChildBtn.addEventListener("click", () => {
       const child = getSelectedChild();
-      if (!child) return;
-      if (confirm(`確定刪除 ${child.name}？`)) {
-        runAction(() => api(`/api/children/${child.id}`, { method: "DELETE" }), "孩子已刪除");
-      }
+      if (child && confirm(`確定刪除 ${child.name}？`)) runAction(() => api(`/api/children/${child.id}`, { method: "DELETE" }), "孩子已刪除");
     });
 
-    sendTaskBtn.addEventListener("click", async () => {
+    el.sendTaskBtn.addEventListener("click", async () => {
       const child = getSelectedChild();
       if (!child) return showToast("請先選擇孩子");
-      const name = taskNameInput.value.trim();
+      const name = el.taskNameInput.value.trim();
       if (!name) return showToast("請輸入任務名稱");
       await runAction(() => api(`/api/children/${child.id}/tasks`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          note: taskNoteInput.value.trim(),
-          points: taskPointsInput.value,
-          needPhoto: needPhotoSelect.value
-        })
+        body: JSON.stringify({ name, note: el.taskNoteInput.value.trim(), points: el.taskPointsInput.value, needPhoto: el.needPhotoSelect.value })
       }), "任務已送出");
-      taskNameInput.value = "";
-      taskNoteInput.value = "";
-      taskPointsInput.value = "5";
-      needPhotoSelect.value = "no";
+      el.taskNameInput.value = "";
+      el.taskNoteInput.value = "";
+      el.taskPointsInput.value = "5";
+      el.needPhotoSelect.value = "no";
     });
 
-    addFineBtn.addEventListener("click", async () => {
+    el.addFineBtn.addEventListener("click", async () => {
       const child = getSelectedChild();
       if (!child) return showToast("請先選擇孩子");
-      const reason = fineReasonInput.value.trim();
+      const reason = el.fineReasonInput.value.trim();
       if (!reason) return showToast("請輸入罰單原因");
       await runAction(() => api(`/api/children/${child.id}/fines`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ points: finePointsInput.value, reason })
+        body: JSON.stringify({ points: el.finePointsInput.value, reason })
       }), "罰單已建立，積分已扣除");
-      fineReasonInput.value = "";
-      finePointsInput.value = "3";
+      el.fineReasonInput.value = "";
+      el.finePointsInput.value = "3";
     });
 
-    addShopItemBtn.addEventListener("click", async () => {
-      const name = shopNameInput.value.trim();
+    el.addShopItemBtn.addEventListener("click", async () => {
+      const name = el.shopNameInput.value.trim();
       if (!name) return showToast("請輸入商品名稱");
       await runAction(() => api("/api/shop", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          description: shopDescriptionInput.value.trim(),
-          cost: shopCostInput.value,
-          stock: shopStockInput.value
-        })
+        body: JSON.stringify({ name, description: el.shopDescriptionInput.value.trim(), cost: el.shopCostInput.value, stock: el.shopStockInput.value })
       }), "商品已上架");
-      shopNameInput.value = "";
-      shopDescriptionInput.value = "";
-      shopCostInput.value = "20";
-      shopStockInput.value = "1";
+      el.shopNameInput.value = "";
+      el.shopDescriptionInput.value = "";
+      el.shopCostInput.value = "20";
+      el.shopStockInput.value = "1";
     });
 
-    childLoginBtn.addEventListener("click", () => {
-      const childId = childLoginSelect.value;
+    el.saveMonetizationBtn.addEventListener("click", async () => {
+      await runAction(() => api("/api/monetization", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          adsEnabled: el.adsEnabledSelect.value === "yes",
+          sponsorName: el.sponsorNameInput.value.trim(),
+          sponsorText: el.sponsorTextInput.value.trim(),
+          sponsorUrl: el.sponsorUrlInput.value.trim()
+        })
+      }), "商業設定已儲存");
+    });
+
+    el.childLoginBtn.addEventListener("click", () => {
+      const childId = el.childLoginSelect.value;
       if (!childId) return showToast("目前沒有孩子");
       currentChildId = childId;
       renderAll();
