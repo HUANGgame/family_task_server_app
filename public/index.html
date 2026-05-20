@@ -19,7 +19,6 @@
       --green: #328158;
       --red: #b84f47;
       --soft: #eef5f2;
-      --ad: #f7f0df;
       --shadow: 0 10px 28px rgba(28, 46, 39, 0.1);
     }
 
@@ -75,8 +74,6 @@
     .empty { border: 1px dashed #c9d3cb; border-radius: 8px; padding: 14px; background: #fbfcfa; color: var(--muted); line-height: 1.55; }
     .hero-points { border-radius: 8px; padding: 20px; background: #fff7e6; border: 1px solid #f1d18a; color: #6d4a0b; }
     .hero-points b { display: block; margin-top: 4px; font-size: 40px; line-height: 1; color: var(--gold); }
-    .sponsor { border: 1px solid #ead8aa; background: var(--ad); box-shadow: none; }
-    .sponsor small { display: block; margin-bottom: 6px; color: #7a5b12; font-weight: 800; }
     .toast { position: fixed; right: 18px; bottom: 18px; max-width: min(360px, calc(100vw - 36px)); display: none; border-radius: 8px; padding: 12px 14px; background: #173f45; color: white; box-shadow: var(--shadow); z-index: 30; line-height: 1.5; }
     @media (max-width: 900px) {
       .header-inner, .topbar { align-items: stretch; flex-direction: column; }
@@ -163,7 +160,6 @@
             <button id="addChildBtn" type="button" style="margin-top: 10px;">新增</button>
             <div class="divider"></div>
             <div id="childListForManager" class="stack"></div>
-            <div id="managerSponsorBox" class="item sponsor hidden" style="margin-top: 16px;"></div>
           </aside>
 
           <section class="stack">
@@ -242,33 +238,6 @@
               </div>
             </div>
 
-            <div class="two-grid">
-              <div class="panel">
-                <h2>商業設定</h2>
-                <label for="adsEnabledSelect">贊助版位</label>
-                <select id="adsEnabledSelect">
-                  <option value="no">關閉</option>
-                  <option value="yes">開啟</option>
-                </select>
-                <label for="sponsorNameInput">贊助名稱</label>
-                <input id="sponsorNameInput" type="text" maxlength="120" placeholder="例如：家庭好物推薦">
-                <label for="sponsorTextInput">贊助文字</label>
-                <textarea id="sponsorTextInput" maxlength="500" placeholder="短短一句，不干擾使用"></textarea>
-                <label for="sponsorUrlInput">連結</label>
-                <input id="sponsorUrlInput" type="url" maxlength="300" placeholder="https://">
-                <button id="saveMonetizationBtn" type="button" style="margin-top: 12px;">儲存商業設定</button>
-              </div>
-              <div class="panel">
-                <h2>獲利數據</h2>
-                <div class="metric">
-                  <div class="metric-box"><b id="adImpressionsText">0</b>曝光</div>
-                  <div class="metric-box"><b id="adClicksText">0</b>點擊</div>
-                  <div class="metric-box"><b id="adStatusText">關</b>狀態</div>
-                </div>
-                <p class="muted">版位只出現在側欄與底部，不使用彈窗、不遮任務、不自動跳轉。</p>
-              </div>
-            </div>
-
             <div class="panel">
               <h2>兌換紀錄</h2>
               <div id="redemptionList" class="stack"></div>
@@ -289,7 +258,6 @@
             目前積分
             <b id="childPointText">0</b>
           </div>
-          <div id="childSponsorBox" class="item sponsor hidden" style="margin-top: 16px;"></div>
         </aside>
         <section class="stack">
           <div class="panel">
@@ -312,7 +280,7 @@
   <div id="toast" class="toast" role="status"></div>
 
   <script>
-    let appData = { managerName: "", hasManagerPassword: false, hasRecoveryAnswer: false, children: [], shop: [], redemptions: [], fines: [], monetization: {} };
+    let appData = { managerName: "", hasManagerPassword: false, hasRecoveryAnswer: false, children: [], shop: [], redemptions: [], fines: [] };
     let managerPassword = sessionStorage.getItem("managerPassword") || "";
     let managerUnlocked = Boolean(managerPassword);
     let selectedChildId = "";
@@ -321,7 +289,7 @@
 
     const $ = id => document.getElementById(id);
     const ids = [
-      "managerModeBtn","childModeBtn","managerPage","childPage","refreshBtn","lastUpdatedText","managerLoginPanel","resetPasswordPanel","managerDashboard","managerLoginHint","managerNameInput","managerPasswordInput","recoveryAnswerInput","firstSetupRecovery","managerLoginBtn","showResetBtn","hideResetBtn","resetNameInput","resetAnswerInput","resetPasswordInput","resetPasswordBtn","managerLogoutBtn","childNameInput","addChildBtn","childListForManager","deleteChildBtn","selectedChildTitle","managerWorkArea","childPointCount","totalCount","fineCount","taskNameInput","taskPointsInput","taskNoteInput","needPhotoSelect","sendTaskBtn","managerTaskList","finePointsInput","fineReasonInput","addFineBtn","managerFineList","shopNameInput","shopCostInput","shopStockInput","shopDescriptionInput","addShopItemBtn","managerShopList","redemptionList","adsEnabledSelect","sponsorNameInput","sponsorTextInput","sponsorUrlInput","saveMonetizationBtn","adImpressionsText","adClicksText","adStatusText","managerSponsorBox","childLoginSelect","childLoginBtn","childPointBox","childPointText","childTitle","childTaskList","childFineList","childShopList","childSponsorBox","toast"
+      "managerModeBtn","childModeBtn","managerPage","childPage","refreshBtn","lastUpdatedText","managerLoginPanel","resetPasswordPanel","managerDashboard","managerLoginHint","managerNameInput","managerPasswordInput","recoveryAnswerInput","firstSetupRecovery","managerLoginBtn","showResetBtn","hideResetBtn","resetNameInput","resetAnswerInput","resetPasswordInput","resetPasswordBtn","managerLogoutBtn","childNameInput","addChildBtn","childListForManager","deleteChildBtn","selectedChildTitle","managerWorkArea","childPointCount","totalCount","fineCount","taskNameInput","taskPointsInput","taskNoteInput","needPhotoSelect","sendTaskBtn","managerTaskList","finePointsInput","fineReasonInput","addFineBtn","managerFineList","shopNameInput","shopCostInput","shopStockInput","shopDescriptionInput","addShopItemBtn","managerShopList","redemptionList","childLoginSelect","childLoginBtn","childPointBox","childPointText","childTitle","childTaskList","childFineList","childShopList","toast"
     ];
     const el = Object.fromEntries(ids.map(id => [id, $(id)]));
 
@@ -381,10 +349,8 @@
       renderManagerWorkArea();
       renderManagerShop();
       renderRedemptions();
-      renderMonetization();
       renderChildOptions();
       renderChildView();
-      renderSponsorBoxes();
     }
 
     function renderManagerGate() {
@@ -490,41 +456,6 @@
         item.appendChild(textNode("div", "item-title", `${record.childName} 兌換 ${record.itemName}`));
         item.appendChild(textNode("p", "", `${record.cost} 分 · ${record.createdAt}`));
         el.redemptionList.appendChild(item);
-      });
-    }
-
-    function renderMonetization() {
-      const m = appData.monetization || {};
-      el.adsEnabledSelect.value = m.adsEnabled ? "yes" : "no";
-      el.sponsorNameInput.value = m.sponsorName || "";
-      el.sponsorTextInput.value = m.sponsorText || "";
-      el.sponsorUrlInput.value = m.sponsorUrl || "";
-      el.adImpressionsText.textContent = m.impressions || 0;
-      el.adClicksText.textContent = m.clicks || 0;
-      el.adStatusText.textContent = m.adsEnabled ? "開" : "關";
-    }
-
-    function renderSponsorBoxes() {
-      const m = appData.monetization || {};
-      const visible = Boolean(m.adsEnabled && (m.sponsorName || m.sponsorText));
-      [el.managerSponsorBox, el.childSponsorBox].forEach(box => {
-        empty(box);
-        box.classList.toggle("hidden", !visible);
-        if (!visible) return;
-        box.appendChild(textNode("small", "", "贊助"));
-        box.appendChild(textNode("div", "item-title", m.sponsorName || "推薦"));
-        box.appendChild(textNode("p", "", m.sponsorText || ""));
-        if (m.sponsorUrl) {
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "btn-light";
-          btn.textContent = "了解";
-          btn.addEventListener("click", async () => {
-            await fetch("/api/ads/click", { method: "POST" }).catch(() => {});
-            window.open(m.sponsorUrl, "_blank", "noopener");
-          });
-          box.appendChild(btn);
-        }
       });
     }
 
@@ -796,19 +727,6 @@
       el.shopDescriptionInput.value = "";
       el.shopCostInput.value = "20";
       el.shopStockInput.value = "1";
-    });
-
-    el.saveMonetizationBtn.addEventListener("click", async () => {
-      await runAction(() => api("/api/monetization", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          adsEnabled: el.adsEnabledSelect.value === "yes",
-          sponsorName: el.sponsorNameInput.value.trim(),
-          sponsorText: el.sponsorTextInput.value.trim(),
-          sponsorUrl: el.sponsorUrlInput.value.trim()
-        })
-      }), "商業設定已儲存");
     });
 
     el.childLoginBtn.addEventListener("click", () => {

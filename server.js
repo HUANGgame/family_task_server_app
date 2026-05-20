@@ -21,15 +21,7 @@ function defaultData() {
     children: [],
     shop: [],
     redemptions: [],
-    fines: [],
-    monetization: {
-      adsEnabled: false,
-      sponsorName: "",
-      sponsorText: "",
-      sponsorUrl: "",
-      impressions: 0,
-      clicks: 0
-    }
+    fines: []
   };
 }
 
@@ -83,8 +75,6 @@ function normalizeTask(task = {}) {
 
 function normalizeData(input) {
   const source = input && typeof input === "object" ? input : defaultData();
-  const monetization = source.monetization && typeof source.monetization === "object" ? source.monetization : {};
-
   return {
     managerName: cleanText(source.managerName),
     managerPassword: typeof source.managerPassword === "string" ? source.managerPassword : "",
@@ -122,15 +112,7 @@ function normalizeData(input) {
       deducted: cleanNumber(record.deducted, record.points || 0),
       reason: cleanText(record.reason, MAX_NOTE_LENGTH) || "沒有填寫原因",
       createdAt: typeof record.createdAt === "string" ? record.createdAt : nowText()
-    })) : [],
-    monetization: {
-      adsEnabled: Boolean(monetization.adsEnabled),
-      sponsorName: cleanText(monetization.sponsorName),
-      sponsorText: cleanText(monetization.sponsorText, MAX_NOTE_LENGTH),
-      sponsorUrl: cleanText(monetization.sponsorUrl, 300),
-      impressions: cleanNumber(monetization.impressions, 0),
-      clicks: cleanNumber(monetization.clicks, 0)
-    }
+    })) : []
   };
 }
 
@@ -159,15 +141,7 @@ function publicData(data) {
     children: normalized.children,
     shop: normalized.shop,
     redemptions: normalized.redemptions,
-    fines: normalized.fines,
-    monetization: {
-      adsEnabled: normalized.monetization.adsEnabled,
-      sponsorName: normalized.monetization.sponsorName,
-      sponsorText: normalized.monetization.sponsorText,
-      sponsorUrl: normalized.monetization.sponsorUrl,
-      impressions: normalized.monetization.impressions,
-      clicks: normalized.monetization.clicks
-    }
+    fines: normalized.fines
   };
 }
 
@@ -223,16 +197,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/api/data", (req, res) => {
   const data = readData();
-  data.monetization.impressions += data.monetization.adsEnabled ? 1 : 0;
-  writeData(data);
   res.json(publicData(data));
-});
-
-app.post("/api/ads/click", (req, res) => {
-  const data = readData();
-  data.monetization.clicks += 1;
-  writeData(data);
-  res.json({ ok: true });
 });
 
 app.post("/api/manager/login", (req, res) => {
@@ -291,15 +256,6 @@ app.put("/api/manager", requireManager, (req, res) => {
   if (recoveryAnswer) req.appData.recoveryAnswer = recoveryAnswer;
   writeData(req.appData);
   res.json(publicData(req.appData));
-});
-
-app.put("/api/monetization", requireManager, (req, res) => {
-  req.appData.monetization.adsEnabled = Boolean(req.body.adsEnabled);
-  req.appData.monetization.sponsorName = cleanText(req.body.sponsorName);
-  req.appData.monetization.sponsorText = cleanText(req.body.sponsorText, MAX_NOTE_LENGTH);
-  req.appData.monetization.sponsorUrl = cleanText(req.body.sponsorUrl, 300);
-  writeData(req.appData);
-  res.json(publicData(req.appData).monetization);
 });
 
 app.post("/api/children", requireManager, (req, res) => {
