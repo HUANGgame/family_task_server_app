@@ -3,20 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>家庭任務管理</title>
+  <title>家庭任務積分</title>
   <style>
     :root {
-      --bg: #f6f7f3;
+      --bg: #f5f7f2;
       --panel: #ffffff;
-      --ink: #27302c;
-      --muted: #66716b;
-      --line: #dfe5dc;
+      --ink: #222c28;
+      --muted: #68746f;
+      --line: #dbe3dd;
       --primary: #246a73;
-      --primary-dark: #174f56;
-      --accent: #f2b84b;
-      --danger: #b94e48;
-      --success: #3b8f62;
-      --shadow: 0 12px 34px rgba(34, 48, 42, 0.1);
+      --primary-dark: #194f56;
+      --gold: #d99a21;
+      --green: #328158;
+      --red: #b84f47;
+      --soft: #eef5f2;
+      --shadow: 0 10px 28px rgba(28, 46, 39, 0.1);
     }
 
     * { box-sizing: border-box; }
@@ -35,35 +36,27 @@
       padding: 22px 5vw;
     }
 
-    .header-inner {
-      width: min(1160px, 100%);
+    .header-inner, .shell {
+      width: min(1120px, 92vw);
       margin: 0 auto;
+    }
+
+    .header-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
+      gap: 16px;
     }
 
     h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 4px; font-size: 28px; letter-spacing: 0; }
+    h2 { margin-bottom: 14px; font-size: 21px; }
+    h3 { margin-bottom: 10px; font-size: 17px; }
+    header p { margin-bottom: 0; color: rgba(255, 255, 255, 0.78); }
 
-    h1 {
-      margin-bottom: 4px;
-      font-size: 28px;
-      letter-spacing: 0;
-    }
+    .shell { margin-top: 20px; margin-bottom: 42px; }
 
-    header p {
-      margin-bottom: 0;
-      color: rgba(255, 255, 255, 0.8);
-      line-height: 1.6;
-    }
-
-    .shell {
-      width: min(1160px, 92vw);
-      margin: 20px auto 40px;
-    }
-
-    .toolbar {
+    .topbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -74,52 +67,45 @@
     .segmented {
       display: inline-grid;
       grid-template-columns: 1fr 1fr;
+      gap: 4px;
       padding: 4px;
       border: 1px solid var(--line);
-      background: #eef2ec;
       border-radius: 8px;
-      gap: 4px;
+      background: #eef2ec;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: minmax(280px, 360px) 1fr;
-      gap: 18px;
+      grid-template-columns: 320px 1fr;
+      gap: 16px;
       align-items: start;
     }
 
-    .panel {
+    .two-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .panel, .item, .task {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 18px;
       box-shadow: var(--shadow);
     }
 
-    .section-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
+    .panel { padding: 18px; }
+    .item, .task { padding: 14px; box-shadow: none; }
 
-    h2 {
-      margin-bottom: 14px;
-      font-size: 21px;
-    }
-
-    h3 {
-      margin-bottom: 10px;
-      font-size: 17px;
-    }
+    .stack { display: grid; gap: 12px; }
+    .hidden { display: none !important; }
 
     label {
       display: block;
-      margin: 14px 0 6px;
-      color: var(--ink);
-      font-weight: 700;
+      margin: 12px 0 6px;
       font-size: 14px;
+      font-weight: 800;
     }
 
     input, textarea, select {
@@ -128,15 +114,12 @@
       border: 1px solid #cbd5cf;
       border-radius: 8px;
       padding: 10px 11px;
-      color: var(--ink);
       background: white;
+      color: var(--ink);
       font: inherit;
     }
 
-    textarea {
-      min-height: 84px;
-      resize: vertical;
-    }
+    textarea { min-height: 76px; resize: vertical; }
 
     button {
       min-height: 40px;
@@ -146,7 +129,7 @@
       background: var(--primary);
       color: white;
       font: inherit;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
     }
 
@@ -159,20 +142,26 @@
       color: var(--primary);
     }
 
-    .btn-light:hover { background: #eef5f2; }
-    .btn-danger { background: var(--danger); }
-    .btn-danger:hover { background: #943c37; }
-    .btn-success { background: var(--success); }
-    .btn-success:hover { background: #2f744f; }
+    .btn-light:hover { background: var(--soft); }
+    .btn-red { background: var(--red); }
+    .btn-red:hover { background: #943d37; }
+    .btn-green { background: var(--green); }
+    .btn-green:hover { background: #276846; }
     .active-btn { background: var(--primary); color: white; }
 
-    .stack { display: grid; gap: 12px; }
-    .hidden { display: none !important; }
+    .row, .between {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .between { justify-content: space-between; }
 
     .muted {
       color: var(--muted);
       font-size: 14px;
-      line-height: 1.6;
+      line-height: 1.55;
     }
 
     .divider {
@@ -181,156 +170,108 @@
       background: var(--line);
     }
 
-    .child-item, .task {
+    .child-button {
+      width: 100%;
+      text-align: left;
       border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 14px;
       background: #fbfcfa;
+      color: var(--ink);
     }
 
-    .child-item {
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-    }
-
-    .child-item:hover, .child-item.active {
+    .child-button.active, .child-button:hover {
       border-color: var(--primary);
-      background: #edf7f4;
+      background: var(--soft);
     }
 
-    .child-name, .task-title {
-      font-weight: 800;
-      font-size: 17px;
-      overflow-wrap: anywhere;
-    }
-
-    .row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .row-between {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .summary {
+    .metric {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 10px;
       margin-bottom: 16px;
     }
 
-    .summary-box {
+    .metric-box {
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 12px;
-      background: #f7faf4;
-      color: var(--muted);
+      background: #fafcf8;
       text-align: center;
+      color: var(--muted);
     }
 
-    .summary-box b {
+    .metric-box b {
       display: block;
+      margin-bottom: 4px;
       color: var(--primary);
       font-size: 28px;
       line-height: 1;
-      margin-bottom: 6px;
+    }
+
+    .points {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: #fff3d7;
+      color: #78510c;
+      font-size: 13px;
+      font-weight: 900;
     }
 
     .status {
       display: inline-flex;
       align-items: center;
-      min-height: 28px;
       border-radius: 999px;
-      padding: 3px 10px;
-      background: #fff2cf;
-      color: #77540d;
+      padding: 4px 10px;
+      background: #fff3d7;
+      color: #78510c;
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 900;
     }
 
-    .status.done {
-      background: #dff2e5;
-      color: #23613e;
-    }
+    .status.done { background: #dff3e6; color: #276846; }
 
     .task {
       display: grid;
-      gap: 10px;
+      gap: 9px;
       margin-top: 12px;
     }
 
-    .task.done {
-      border-color: #b9dbc4;
-      background: #f1fbf4;
-    }
-
-    .task p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.55;
-      overflow-wrap: anywhere;
-    }
+    .task.done { background: #f4fbf6; border-color: #b9dcc6; }
+    .task-title, .item-title { font-size: 17px; font-weight: 900; overflow-wrap: anywhere; }
+    .task p, .item p { margin: 0; color: var(--muted); line-height: 1.55; overflow-wrap: anywhere; }
 
     .photo {
       width: 100%;
-      max-height: 280px;
+      max-height: 260px;
       object-fit: cover;
       border: 1px solid var(--line);
       border-radius: 8px;
     }
 
-    .empty, .notice {
+    .empty {
       border: 1px dashed #c9d3cb;
       border-radius: 8px;
       padding: 14px;
       background: #fbfcfa;
       color: var(--muted);
-      line-height: 1.65;
+      line-height: 1.55;
     }
 
-    .notice {
-      border-style: solid;
-      background: #fff8e8;
-      color: #6e5519;
-    }
-
-    .reward {
-      position: fixed;
-      inset: 0;
-      display: none;
-      place-items: center;
-      padding: 20px;
-      background: rgba(23, 34, 31, 0.36);
-      z-index: 20;
-    }
-
-    .reward-card {
-      width: min(340px, 100%);
+    .hero-points {
       border-radius: 8px;
-      padding: 24px;
-      background: white;
-      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.28);
-      text-align: center;
+      padding: 20px;
+      background: #fff7e6;
+      border: 1px solid #f1d18a;
+      color: #6d4a0b;
     }
 
-    .reward-mark {
-      display: grid;
-      place-items: center;
-      width: 56px;
-      height: 56px;
-      margin: 0 auto 12px;
-      border-radius: 50%;
-      background: var(--accent);
-      color: #503500;
-      font-size: 30px;
-      font-weight: 900;
+    .hero-points b {
+      display: block;
+      margin-top: 4px;
+      font-size: 40px;
+      line-height: 1;
+      color: var(--gold);
     }
 
     .toast {
@@ -338,19 +279,19 @@
       right: 18px;
       bottom: 18px;
       max-width: min(360px, calc(100vw - 36px));
+      display: none;
       border-radius: 8px;
       padding: 12px 14px;
       background: #173f45;
       color: white;
       box-shadow: var(--shadow);
-      display: none;
       z-index: 30;
       line-height: 1.5;
     }
 
-    @media (max-width: 880px) {
-      .header-inner, .toolbar { align-items: stretch; flex-direction: column; }
-      .grid, .summary { grid-template-columns: 1fr; }
+    @media (max-width: 900px) {
+      .header-inner, .topbar { align-items: stretch; flex-direction: column; }
+      .grid, .two-grid, .metric { grid-template-columns: 1fr; }
       .segmented { width: 100%; }
       h1 { font-size: 24px; }
     }
@@ -360,118 +301,166 @@
   <header>
     <div class="header-inner">
       <div>
-        <h1>家庭任務管理</h1>
-        <p>家長派任務，孩子完成並回傳照片，所有資料都存在本機。</p>
+        <h1>家庭任務積分</h1>
+        <p>完成任務拿積分，累積後到商店兌換獎勵。</p>
       </div>
       <button id="refreshBtn" class="btn-light" type="button">重新整理</button>
     </div>
   </header>
 
   <main class="shell">
-    <div class="toolbar">
-      <div class="segmented" aria-label="切換模式">
-        <button id="managerModeBtn" class="active-btn" type="button">家長模式</button>
-        <button id="childModeBtn" class="btn-light" type="button">孩子模式</button>
+    <div class="topbar">
+      <div class="segmented">
+        <button id="managerModeBtn" class="active-btn" type="button">家長</button>
+        <button id="childModeBtn" class="btn-light" type="button">孩子</button>
       </div>
       <p id="lastUpdatedText" class="muted">尚未同步</p>
     </div>
 
     <section id="managerPage">
-      <div class="grid">
-        <aside class="panel">
-          <h2>家長設定</h2>
-          <label for="managerNameInput">家長名稱</label>
-          <input id="managerNameInput" type="text" maxlength="120" placeholder="例如：媽媽、爸爸、阿姨">
-          <div class="row" style="margin-top: 10px;">
-            <button id="saveManagerNameBtn" type="button">儲存名稱</button>
+      <div id="managerLoginPanel" class="panel">
+        <h2>家長登入</h2>
+        <p id="managerLoginHint" class="muted">第一次使用請設定家長名稱與密碼。</p>
+        <div class="two-grid">
+          <div>
+            <label for="managerNameInput">家長名稱</label>
+            <input id="managerNameInput" type="text" maxlength="120" placeholder="例如：媽媽">
           </div>
-          <p id="managerNameText" class="muted" style="margin-top: 10px;">尚未設定家長名稱</p>
-
-          <div class="divider"></div>
-
-          <h2>孩子名單</h2>
-          <label for="childNameInput">新增孩子</label>
-          <input id="childNameInput" type="text" maxlength="120" placeholder="輸入孩子名稱">
-          <div class="row" style="margin-top: 10px;">
-            <button id="addChildBtn" type="button">新增孩子</button>
+          <div>
+            <label for="managerPasswordInput">家長密碼</label>
+            <input id="managerPasswordInput" type="password" placeholder="至少 4 碼">
           </div>
+        </div>
+        <div class="row" style="margin-top: 12px;">
+          <button id="managerLoginBtn" type="button">進入家長介面</button>
+        </div>
+      </div>
 
-          <div class="divider"></div>
-          <div id="childListForManager" class="stack"></div>
-        </aside>
-
-        <section class="panel">
-          <div class="section-title">
-            <h2 id="selectedChildTitle">選擇一位孩子</h2>
-            <button id="deleteChildBtn" class="btn-danger hidden" type="button">刪除孩子</button>
-          </div>
-
-          <div id="managerWorkArea" class="hidden">
-            <div class="summary">
-              <div class="summary-box"><b id="totalCount">0</b>全部任務</div>
-              <div class="summary-box"><b id="doneCount">0</b>已完成</div>
-              <div class="summary-box"><b id="notDoneCount">0</b>待完成</div>
+      <div id="managerDashboard" class="hidden">
+        <div class="grid">
+          <aside class="panel">
+            <div class="between">
+              <h2>孩子</h2>
+              <button id="managerLogoutBtn" class="btn-light" type="button">登出</button>
             </div>
 
-            <h3>派新任務</h3>
-            <label for="taskNameInput">任務名稱</label>
-            <input id="taskNameInput" type="text" maxlength="120" placeholder="例如：整理書桌">
-
-            <label for="taskNoteInput">任務說明</label>
-            <textarea id="taskNoteInput" maxlength="500" placeholder="補充完成標準或注意事項"></textarea>
-
-            <label for="needPhotoSelect">是否需要照片</label>
-            <select id="needPhotoSelect">
-              <option value="no">不需要照片</option>
-              <option value="yes">需要上傳照片</option>
-            </select>
-
-            <div class="row" style="margin-top: 12px;">
-              <button id="sendTaskBtn" type="button">送出任務</button>
-            </div>
+            <label for="childNameInput">新增孩子</label>
+            <input id="childNameInput" type="text" maxlength="120" placeholder="孩子名稱">
+            <button id="addChildBtn" type="button" style="margin-top: 10px;">新增</button>
 
             <div class="divider"></div>
-            <h3>任務紀錄</h3>
-            <div id="managerTaskList"></div>
-          </div>
-        </section>
+            <div id="childListForManager" class="stack"></div>
+          </aside>
+
+          <section class="stack">
+            <div class="panel">
+              <div class="between">
+                <h2 id="selectedChildTitle">選擇孩子</h2>
+                <button id="deleteChildBtn" class="btn-red hidden" type="button">刪除孩子</button>
+              </div>
+
+              <div id="managerWorkArea" class="hidden">
+                <div class="metric">
+                  <div class="metric-box"><b id="childPointCount">0</b>目前積分</div>
+                  <div class="metric-box"><b id="totalCount">0</b>任務</div>
+                  <div class="metric-box"><b id="doneCount">0</b>完成</div>
+                </div>
+
+                <h3>派任務</h3>
+                <div class="two-grid">
+                  <div>
+                    <label for="taskNameInput">任務名稱</label>
+                    <input id="taskNameInput" type="text" maxlength="120" placeholder="例如：整理書桌">
+                  </div>
+                  <div>
+                    <label for="taskPointsInput">此次任務積分</label>
+                    <input id="taskPointsInput" type="number" min="1" step="1" value="5">
+                  </div>
+                </div>
+                <label for="taskNoteInput">說明</label>
+                <textarea id="taskNoteInput" maxlength="500" placeholder="簡短說明即可"></textarea>
+                <label for="needPhotoSelect">照片</label>
+                <select id="needPhotoSelect">
+                  <option value="no">不需要</option>
+                  <option value="yes">需要上傳照片</option>
+                </select>
+                <button id="sendTaskBtn" type="button" style="margin-top: 12px;">送出任務</button>
+
+                <div class="divider"></div>
+                <h3>任務列表</h3>
+                <div id="managerTaskList"></div>
+              </div>
+            </div>
+
+            <div class="two-grid">
+              <div class="panel">
+                <h2>上架商品</h2>
+                <label for="shopNameInput">商品名稱</label>
+                <input id="shopNameInput" type="text" maxlength="120" placeholder="例如：看卡通 30 分鐘">
+                <div class="two-grid">
+                  <div>
+                    <label for="shopCostInput">需要積分</label>
+                    <input id="shopCostInput" type="number" min="1" step="1" value="20">
+                  </div>
+                  <div>
+                    <label for="shopStockInput">數量</label>
+                    <input id="shopStockInput" type="number" min="0" step="1" value="1">
+                  </div>
+                </div>
+                <label for="shopDescriptionInput">說明</label>
+                <textarea id="shopDescriptionInput" maxlength="500" placeholder="可留空"></textarea>
+                <button id="addShopItemBtn" type="button" style="margin-top: 12px;">上架</button>
+              </div>
+
+              <div class="panel">
+                <h2>商店商品</h2>
+                <div id="managerShopList" class="stack"></div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h2>兌換紀錄</h2>
+              <div id="redemptionList" class="stack"></div>
+            </div>
+          </section>
+        </div>
       </div>
     </section>
 
     <section id="childPage" class="hidden">
       <div class="grid">
         <aside class="panel">
-          <h2>孩子登入</h2>
-          <div class="notice">手機與電腦連到同一個 Wi-Fi 後，用電腦的本機 IP 加上連接埠 3000 開啟即可。</div>
-          <label for="childLoginSelect">選擇孩子</label>
+          <h2>孩子入口</h2>
+          <label for="childLoginSelect">我是誰</label>
           <select id="childLoginSelect"></select>
-          <div class="row" style="margin-top: 10px;">
-            <button id="childLoginBtn" type="button">進入任務</button>
+          <button id="childLoginBtn" type="button" style="margin-top: 10px;">進入</button>
+          <div id="childPointBox" class="hero-points hidden" style="margin-top: 16px;">
+            目前積分
+            <b id="childPointText">0</b>
           </div>
-          <p id="childLoginText" class="muted" style="margin-top: 10px;">尚未登入孩子</p>
         </aside>
 
-        <section class="panel">
-          <h2 id="childTitle">孩子任務</h2>
-          <div id="childTaskList" class="empty">請先選擇孩子登入</div>
+        <section class="stack">
+          <div class="panel">
+            <h2 id="childTitle">我的任務</h2>
+            <div id="childTaskList" class="empty">請先選擇孩子</div>
+          </div>
+
+          <div class="panel">
+            <h2>獎勵商店</h2>
+            <div id="childShopList" class="stack"></div>
+          </div>
         </section>
       </div>
     </section>
   </main>
 
-  <div id="rewardBox" class="reward" role="dialog" aria-modal="true" aria-labelledby="rewardTitle">
-    <div class="reward-card">
-      <div class="reward-mark">✓</div>
-      <h3 id="rewardTitle">任務完成</h3>
-      <p id="rewardText" class="muted">做得很好，繼續保持。</p>
-      <button id="closeRewardBtn" type="button">知道了</button>
-    </div>
-  </div>
-
   <div id="toast" class="toast" role="status"></div>
 
   <script>
-    let appData = { managerName: "", children: [] };
+    let appData = { managerName: "", hasManagerPassword: false, children: [], shop: [], redemptions: [] };
+    let managerPassword = sessionStorage.getItem("managerPassword") || "";
+    let managerUnlocked = Boolean(managerPassword);
     let selectedChildId = "";
     let currentChildId = "";
     let toastTimer = null;
@@ -485,35 +474,45 @@
     const refreshBtn = $("refreshBtn");
     const lastUpdatedText = $("lastUpdatedText");
 
+    const managerLoginPanel = $("managerLoginPanel");
+    const managerDashboard = $("managerDashboard");
+    const managerLoginHint = $("managerLoginHint");
     const managerNameInput = $("managerNameInput");
-    const saveManagerNameBtn = $("saveManagerNameBtn");
-    const managerNameText = $("managerNameText");
+    const managerPasswordInput = $("managerPasswordInput");
+    const managerLoginBtn = $("managerLoginBtn");
+    const managerLogoutBtn = $("managerLogoutBtn");
 
     const childNameInput = $("childNameInput");
     const addChildBtn = $("addChildBtn");
     const childListForManager = $("childListForManager");
     const deleteChildBtn = $("deleteChildBtn");
-
     const selectedChildTitle = $("selectedChildTitle");
     const managerWorkArea = $("managerWorkArea");
+    const childPointCount = $("childPointCount");
     const totalCount = $("totalCount");
     const doneCount = $("doneCount");
-    const notDoneCount = $("notDoneCount");
     const taskNameInput = $("taskNameInput");
+    const taskPointsInput = $("taskPointsInput");
     const taskNoteInput = $("taskNoteInput");
     const needPhotoSelect = $("needPhotoSelect");
     const sendTaskBtn = $("sendTaskBtn");
     const managerTaskList = $("managerTaskList");
 
+    const shopNameInput = $("shopNameInput");
+    const shopCostInput = $("shopCostInput");
+    const shopStockInput = $("shopStockInput");
+    const shopDescriptionInput = $("shopDescriptionInput");
+    const addShopItemBtn = $("addShopItemBtn");
+    const managerShopList = $("managerShopList");
+    const redemptionList = $("redemptionList");
+
     const childLoginSelect = $("childLoginSelect");
     const childLoginBtn = $("childLoginBtn");
-    const childLoginText = $("childLoginText");
+    const childPointBox = $("childPointBox");
+    const childPointText = $("childPointText");
     const childTitle = $("childTitle");
     const childTaskList = $("childTaskList");
-
-    const rewardBox = $("rewardBox");
-    const rewardText = $("rewardText");
-    const closeRewardBtn = $("closeRewardBtn");
+    const childShopList = $("childShopList");
     const toast = $("toast");
 
     function showToast(message) {
@@ -526,33 +525,35 @@
     }
 
     async function api(url, options = {}) {
-      const response = await fetch(url, options);
+      const headers = { ...(options.headers || {}) };
+      if (managerPassword) headers["X-Manager-Password"] = managerPassword;
+      const response = await fetch(url, { ...options, headers });
       const data = await response.json().catch(() => ({}));
-
-      if (!response.ok) {
-        throw new Error(data.message || "操作失敗，請稍後再試");
-      }
-
+      if (!response.ok) throw new Error(data.message || "操作失敗");
       return data;
     }
 
     async function loadData({ quiet = false } = {}) {
       try {
         appData = await api("/api/data");
-
-        if (selectedChildId && !appData.children.some(child => child.id === selectedChildId)) {
-          selectedChildId = "";
-        }
-
-        if (currentChildId && !appData.children.some(child => child.id === currentChildId)) {
-          currentChildId = "";
-        }
-
+        if (selectedChildId && !appData.children.some(child => child.id === selectedChildId)) selectedChildId = "";
+        if (currentChildId && !appData.children.some(child => child.id === currentChildId)) currentChildId = "";
         renderAll();
         lastUpdatedText.textContent = `已同步 ${new Date().toLocaleTimeString("zh-TW", { hour: "2-digit", minute: "2-digit" })}`;
       } catch (error) {
         if (!quiet) showToast(error.message);
       }
+    }
+
+    function empty(node) {
+      while (node.firstChild) node.removeChild(node.firstChild);
+    }
+
+    function textNode(tag, className, value) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      node.textContent = value;
+      return node;
     }
 
     function getSelectedChild() {
@@ -563,113 +564,130 @@
       return appData.children.find(child => child.id === currentChildId);
     }
 
-    function setModeButtons(mode) {
-      const managerActive = mode === "manager";
-      managerModeBtn.classList.toggle("active-btn", managerActive);
-      managerModeBtn.classList.toggle("btn-light", !managerActive);
-      childModeBtn.classList.toggle("active-btn", !managerActive);
-      childModeBtn.classList.toggle("btn-light", managerActive);
-    }
-
     function switchMode(mode) {
-      managerPage.classList.toggle("hidden", mode !== "manager");
-      childPage.classList.toggle("hidden", mode !== "child");
-      setModeButtons(mode);
+      const manager = mode === "manager";
+      managerPage.classList.toggle("hidden", !manager);
+      childPage.classList.toggle("hidden", manager);
+      managerModeBtn.classList.toggle("active-btn", manager);
+      managerModeBtn.classList.toggle("btn-light", !manager);
+      childModeBtn.classList.toggle("active-btn", !manager);
+      childModeBtn.classList.toggle("btn-light", manager);
       renderAll();
     }
 
-    function emptyNode(node) {
-      while (node.firstChild) node.removeChild(node.firstChild);
-    }
-
-    function createText(tag, className, text) {
-      const element = document.createElement(tag);
-      if (className) element.className = className;
-      element.textContent = text;
-      return element;
-    }
-
     function renderAll() {
-      renderManagerName();
-      renderChildListForManager();
+      renderManagerGate();
+      renderChildrenForManager();
       renderManagerWorkArea();
-      renderChildLoginOptions();
-      renderChildTaskList();
+      renderManagerShop();
+      renderRedemptions();
+      renderChildOptions();
+      renderChildView();
     }
 
-    function renderManagerName() {
-      managerNameText.textContent = appData.managerName
-        ? `目前家長：${appData.managerName}`
-        : "尚未設定家長名稱";
-      managerNameInput.value = appData.managerName || "";
+    function renderManagerGate() {
+      managerLoginHint.textContent = appData.hasManagerPassword
+        ? "請輸入家長密碼。"
+        : "第一次使用請設定家長名稱與至少 4 碼密碼。";
+      managerNameInput.value = appData.managerName || managerNameInput.value;
+      managerNameInput.disabled = appData.hasManagerPassword && managerUnlocked;
+      managerLoginPanel.classList.toggle("hidden", managerUnlocked);
+      managerDashboard.classList.toggle("hidden", !managerUnlocked);
     }
 
-    function renderChildListForManager() {
-      emptyNode(childListForManager);
-
-      if (appData.children.length === 0) {
-        childListForManager.appendChild(createText("div", "empty", "尚未新增孩子"));
+    function renderChildrenForManager() {
+      empty(childListForManager);
+      if (!appData.children.length) {
+        childListForManager.appendChild(textNode("div", "empty", "還沒有孩子"));
         return;
       }
 
       appData.children.forEach(child => {
         const done = child.tasks.filter(task => task.done).length;
-        const item = document.createElement("button");
-        item.type = "button";
-        item.className = child.id === selectedChildId ? "child-item active" : "child-item";
-        item.style.textAlign = "left";
-
-        item.appendChild(createText("div", "child-name", child.name));
-        item.appendChild(createText("div", "muted", `任務 ${child.tasks.length} 件，完成 ${done} 件`));
-
-        item.addEventListener("click", () => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = child.id === selectedChildId ? "child-button active" : "child-button";
+        button.appendChild(textNode("div", "task-title", child.name));
+        button.appendChild(textNode("div", "muted", `${child.points} 分 · 任務 ${child.tasks.length} · 完成 ${done}`));
+        button.addEventListener("click", () => {
           selectedChildId = child.id;
           renderAll();
         });
-
-        childListForManager.appendChild(item);
+        childListForManager.appendChild(button);
       });
     }
 
     function renderManagerWorkArea() {
       const child = getSelectedChild();
-
       if (!child) {
-        selectedChildTitle.textContent = "選擇一位孩子";
+        selectedChildTitle.textContent = "選擇孩子";
         managerWorkArea.classList.add("hidden");
         deleteChildBtn.classList.add("hidden");
         return;
       }
 
-      selectedChildTitle.textContent = `正在管理：${child.name}`;
+      selectedChildTitle.textContent = child.name;
       managerWorkArea.classList.remove("hidden");
       deleteChildBtn.classList.remove("hidden");
-
-      const doneTasks = child.tasks.filter(task => task.done);
+      childPointCount.textContent = child.points;
       totalCount.textContent = child.tasks.length;
-      doneCount.textContent = doneTasks.length;
-      notDoneCount.textContent = child.tasks.length - doneTasks.length;
+      doneCount.textContent = child.tasks.filter(task => task.done).length;
 
-      emptyNode(managerTaskList);
-
-      if (child.tasks.length === 0) {
-        managerTaskList.appendChild(createText("div", "empty", "這位孩子目前沒有任務"));
+      empty(managerTaskList);
+      if (!child.tasks.length) {
+        managerTaskList.appendChild(textNode("div", "empty", "目前沒有任務"));
         return;
       }
 
-      child.tasks.forEach(task => {
-        managerTaskList.appendChild(createTaskCard({
-          child,
-          task,
-          mode: "manager"
-        }));
+      child.tasks.forEach(task => managerTaskList.appendChild(taskCard(child, task, "manager")));
+    }
+
+    function renderManagerShop() {
+      empty(managerShopList);
+      if (!appData.shop.length) {
+        managerShopList.appendChild(textNode("div", "empty", "尚未上架商品"));
+        return;
+      }
+
+      appData.shop.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "item";
+        card.appendChild(textNode("div", "item-title", item.name));
+        card.appendChild(textNode("p", "", item.description || "沒有說明"));
+        const row = document.createElement("div");
+        row.className = "between";
+        row.appendChild(textNode("span", "points", `${item.cost} 分`));
+        row.appendChild(textNode("span", "muted", `剩 ${item.stock}`));
+        card.appendChild(row);
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn-red";
+        btn.textContent = "下架";
+        btn.addEventListener("click", () => runAction(() => api(`/api/shop/${item.id}`, { method: "DELETE" }), "商品已下架"));
+        card.appendChild(btn);
+        managerShopList.appendChild(card);
       });
     }
 
-    function renderChildLoginOptions() {
-      emptyNode(childLoginSelect);
+    function renderRedemptions() {
+      empty(redemptionList);
+      if (!appData.redemptions.length) {
+        redemptionList.appendChild(textNode("div", "empty", "還沒有兌換紀錄"));
+        return;
+      }
 
-      if (appData.children.length === 0) {
+      appData.redemptions.forEach(record => {
+        const item = document.createElement("div");
+        item.className = "item";
+        item.appendChild(textNode("div", "item-title", `${record.childName} 兌換 ${record.itemName}`));
+        item.appendChild(textNode("p", "", `${record.cost} 分 · ${record.createdAt}`));
+        redemptionList.appendChild(item);
+      });
+    }
+
+    function renderChildOptions() {
+      empty(childLoginSelect);
+      if (!appData.children.length) {
         const option = document.createElement("option");
         option.value = "";
         option.textContent = "尚未建立孩子";
@@ -683,104 +701,116 @@
         option.textContent = child.name;
         childLoginSelect.appendChild(option);
       });
-
       if (currentChildId) childLoginSelect.value = currentChildId;
     }
 
-    function renderChildTaskList() {
+    function renderChildView() {
       const child = getCurrentChild();
+      childPointBox.classList.toggle("hidden", !child);
+      empty(childTaskList);
+      empty(childShopList);
 
       if (!child) {
-        childTitle.textContent = "孩子任務";
-        childLoginText.textContent = "尚未登入孩子";
+        childTitle.textContent = "我的任務";
         childTaskList.className = "empty";
-        childTaskList.textContent = "請先選擇孩子登入";
+        childTaskList.textContent = "請先選擇孩子";
+        childShopList.appendChild(textNode("div", "empty", "請先選擇孩子"));
         return;
       }
 
+      childPointText.textContent = child.points;
       childTitle.textContent = `${child.name} 的任務`;
-      childLoginText.textContent = `目前登入：${child.name}`;
       childTaskList.className = "";
-      emptyNode(childTaskList);
 
-      if (child.tasks.length === 0) {
+      if (!child.tasks.length) {
         childTaskList.className = "empty";
         childTaskList.textContent = "目前沒有任務";
-        return;
+      } else {
+        child.tasks.forEach(task => childTaskList.appendChild(taskCard(child, task, "child")));
       }
 
-      child.tasks.forEach(task => {
-        childTaskList.appendChild(createTaskCard({
-          child,
-          task,
-          mode: "child"
-        }));
-      });
+      const activeShop = appData.shop.filter(item => item.active);
+      if (!activeShop.length) {
+        childShopList.appendChild(textNode("div", "empty", "商店還沒有商品"));
+      } else {
+        activeShop.forEach(item => childShopList.appendChild(shopCardForChild(child, item)));
+      }
     }
 
-    function createTaskCard({ child, task, mode }) {
-      const taskDiv = document.createElement("article");
-      taskDiv.className = task.done ? "task done" : "task";
+    function taskCard(child, task, mode) {
+      const card = document.createElement("article");
+      card.className = task.done ? "task done" : "task";
+      card.appendChild(textNode("div", "task-title", task.name));
+      card.appendChild(textNode("p", "", task.note));
+      const meta = document.createElement("div");
+      meta.className = "row";
+      meta.appendChild(textNode("span", "points", `${task.points} 分`));
+      meta.appendChild(textNode("span", task.done ? "status done" : "status", task.done ? "已完成" : "待完成"));
+      meta.appendChild(textNode("span", "muted", task.needPhoto === "yes" ? "需要照片" : "不需照片"));
+      card.appendChild(meta);
 
-      taskDiv.appendChild(createText("div", "task-title", task.name));
-      taskDiv.appendChild(createText("p", "", task.note));
-      taskDiv.appendChild(createText("p", "", `照片：${task.needPhoto === "yes" ? "需要" : "不需要"}`));
-      taskDiv.appendChild(createText("p", "", `建立時間：${task.createdAt || "未記錄"}`));
-
-      if (task.completedAt) {
-        taskDiv.appendChild(createText("p", "", `完成時間：${task.completedAt}`));
-      }
-
-      const status = createText("span", task.done ? "status done" : "status", task.done ? "已完成" : "待完成");
-      taskDiv.appendChild(status);
-
+      if (task.completedAt) card.appendChild(textNode("p", "", `完成：${task.completedAt}`));
       if (task.photo) {
-        const image = document.createElement("img");
-        image.className = "photo";
-        image.src = task.photo;
-        image.alt = `${task.name} 的完成照片`;
-        taskDiv.appendChild(image);
+        const img = document.createElement("img");
+        img.className = "photo";
+        img.src = task.photo;
+        img.alt = `${task.name} 的照片`;
+        card.appendChild(img);
       }
 
       if (mode === "manager") {
-        const row = document.createElement("div");
-        row.className = "row";
-
-        const deleteBtn = document.createElement("button");
-        deleteBtn.type = "button";
-        deleteBtn.className = "btn-danger";
-        deleteBtn.textContent = "刪除任務";
-        deleteBtn.addEventListener("click", async () => {
-          if (!confirm("確定要刪除這個任務？")) return;
-          await runAction(() => api(`/api/children/${child.id}/tasks/${task.id}`, { method: "DELETE" }), "任務已刪除");
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn-red";
+        btn.textContent = "刪除任務";
+        btn.addEventListener("click", () => {
+          if (confirm("確定刪除這個任務？")) {
+            runAction(() => api(`/api/children/${child.id}/tasks/${task.id}`, { method: "DELETE" }), "任務已刪除");
+          }
         });
-
-        row.appendChild(deleteBtn);
-        taskDiv.appendChild(row);
+        card.appendChild(btn);
       }
 
       if (mode === "child" && !task.done) {
         if (task.needPhoto === "yes") {
           const label = document.createElement("label");
-          label.textContent = "上傳完成照片";
-          taskDiv.appendChild(label);
-
-          const fileInput = document.createElement("input");
-          fileInput.type = "file";
-          fileInput.accept = "image/*";
-          fileInput.addEventListener("change", event => uploadPhoto(child.id, task.id, event));
-          taskDiv.appendChild(fileInput);
+          label.textContent = "上傳照片";
+          card.appendChild(label);
+          const input = document.createElement("input");
+          input.type = "file";
+          input.accept = "image/*";
+          input.addEventListener("change", event => uploadPhoto(child.id, task.id, event));
+          card.appendChild(input);
         }
 
-        const finishBtn = document.createElement("button");
-        finishBtn.type = "button";
-        finishBtn.className = "btn-success";
-        finishBtn.textContent = "完成任務";
-        finishBtn.addEventListener("click", () => finishTask(child.id, task.id));
-        taskDiv.appendChild(finishBtn);
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn-green";
+        btn.textContent = `完成並得到 ${task.points} 分`;
+        btn.addEventListener("click", () => finishTask(child.id, task.id));
+        card.appendChild(btn);
       }
 
-      return taskDiv;
+      return card;
+    }
+
+    function shopCardForChild(child, item) {
+      const card = document.createElement("div");
+      card.className = "item";
+      card.appendChild(textNode("div", "item-title", item.name));
+      card.appendChild(textNode("p", "", item.description || "沒有說明"));
+      const row = document.createElement("div");
+      row.className = "between";
+      row.appendChild(textNode("span", "points", `${item.cost} 分`));
+      row.appendChild(textNode("span", "muted", `剩 ${item.stock}`));
+      card.appendChild(row);
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = child.points >= item.cost ? "兌換" : "積分不夠";
+      btn.disabled = child.points < item.cost || item.stock < 1;
+      btn.addEventListener("click", () => runAction(() => api(`/api/children/${child.id}/redeem/${item.id}`, { method: "POST" }), "兌換成功，請找家長領取"));
+      card.appendChild(btn);
+      return card;
     }
 
     async function runAction(action, successMessage) {
@@ -796,68 +826,80 @@
     async function uploadPhoto(childId, taskId, event) {
       const file = event.target.files[0];
       if (!file) return;
-
       const formData = new FormData();
       formData.append("photo", file);
-
       await runAction(async () => {
-        const response = await fetch(`/api/children/${childId}/tasks/${taskId}/photo`, {
-          method: "POST",
-          body: formData
-        });
+        const response = await fetch(`/api/children/${childId}/tasks/${taskId}/photo`, { method: "POST", body: formData });
         const data = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(data.message || "照片上傳失敗");
       }, "照片已上傳");
     }
 
     async function finishTask(childId, taskId) {
-      await runAction(() => api(`/api/children/${childId}/tasks/${taskId}/finish`, { method: "PUT" }), "");
-      showReward();
+      try {
+        const result = await api(`/api/children/${childId}/tasks/${taskId}/finish`, { method: "PUT" });
+        await loadData({ quiet: true });
+        showToast(`完成任務，得到 ${result.earnedPoints} 分`);
+      } catch (error) {
+        showToast(error.message);
+      }
     }
 
-    function showReward() {
-      const messages = [
-        "做得很好，繼續保持。",
-        "任務完成，今天又前進一步。",
-        "漂亮，家裡的隊友收到成果了。",
-        "完成得很棒，記得給自己一點掌聲。"
-      ];
-      rewardText.textContent = messages[Math.floor(Math.random() * messages.length)];
-      rewardBox.style.display = "grid";
-    }
+    managerLoginBtn.addEventListener("click", async () => {
+      const password = managerPasswordInput.value.trim();
+      if (!password) {
+        showToast("請輸入家長密碼");
+        return;
+      }
+
+      try {
+        if (!appData.hasManagerPassword) {
+          const managerName = managerNameInput.value.trim();
+          if (!managerName) throw new Error("請輸入家長名稱");
+          await api("/api/manager", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ managerName, newPassword: password, managerPassword: password })
+          });
+        } else {
+          await api("/api/manager/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ password })
+          });
+        }
+
+        managerPassword = password;
+        sessionStorage.setItem("managerPassword", password);
+        managerUnlocked = true;
+        managerPasswordInput.value = "";
+        await loadData({ quiet: true });
+        showToast("已進入家長介面");
+      } catch (error) {
+        showToast(error.message);
+      }
+    });
+
+    managerLogoutBtn.addEventListener("click", () => {
+      managerPassword = "";
+      managerUnlocked = false;
+      sessionStorage.removeItem("managerPassword");
+      renderAll();
+    });
 
     managerModeBtn.addEventListener("click", () => switchMode("manager"));
     childModeBtn.addEventListener("click", () => switchMode("child"));
     refreshBtn.addEventListener("click", () => loadData());
 
-    saveManagerNameBtn.addEventListener("click", async () => {
-      const managerName = managerNameInput.value.trim();
-      if (!managerName) {
-        showToast("請輸入家長名稱");
-        return;
-      }
-
-      await runAction(() => api("/api/manager", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ managerName })
-      }), "家長名稱已儲存");
-    });
-
     addChildBtn.addEventListener("click", async () => {
       const name = childNameInput.value.trim();
-      if (!name) {
-        showToast("請輸入孩子名稱");
-        return;
-      }
-
+      if (!name) return showToast("請輸入孩子名稱");
       try {
         const child = await api("/api/children", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name })
         });
-
         selectedChildId = child.id;
         currentChildId = child.id;
         childNameInput.value = "";
@@ -868,60 +910,64 @@
       }
     });
 
-    deleteChildBtn.addEventListener("click", async () => {
+    deleteChildBtn.addEventListener("click", () => {
       const child = getSelectedChild();
       if (!child) return;
-      if (!confirm(`確定要刪除 ${child.name} 與所有任務？`)) return;
-
-      await runAction(() => api(`/api/children/${child.id}`, { method: "DELETE" }), "孩子已刪除");
+      if (confirm(`確定刪除 ${child.name}？`)) {
+        runAction(() => api(`/api/children/${child.id}`, { method: "DELETE" }), "孩子已刪除");
+      }
     });
 
     sendTaskBtn.addEventListener("click", async () => {
       const child = getSelectedChild();
-      if (!child) {
-        showToast("請先選擇孩子");
-        return;
-      }
-
+      if (!child) return showToast("請先選擇孩子");
       const name = taskNameInput.value.trim();
-      const note = taskNoteInput.value.trim();
-      const needPhoto = needPhotoSelect.value;
-
-      if (!name) {
-        showToast("請輸入任務名稱");
-        return;
-      }
+      if (!name) return showToast("請輸入任務名稱");
 
       await runAction(() => api(`/api/children/${child.id}/tasks`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, note, needPhoto })
-      }), `任務已送給 ${child.name}`);
+        body: JSON.stringify({
+          name,
+          note: taskNoteInput.value.trim(),
+          points: taskPointsInput.value,
+          needPhoto: needPhotoSelect.value
+        })
+      }), "任務已送出");
 
       taskNameInput.value = "";
       taskNoteInput.value = "";
+      taskPointsInput.value = "5";
       needPhotoSelect.value = "no";
+    });
+
+    addShopItemBtn.addEventListener("click", async () => {
+      const name = shopNameInput.value.trim();
+      if (!name) return showToast("請輸入商品名稱");
+
+      await runAction(() => api("/api/shop", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          description: shopDescriptionInput.value.trim(),
+          cost: shopCostInput.value,
+          stock: shopStockInput.value
+        })
+      }), "商品已上架");
+
+      shopNameInput.value = "";
+      shopDescriptionInput.value = "";
+      shopCostInput.value = "20";
+      shopStockInput.value = "1";
     });
 
     childLoginBtn.addEventListener("click", () => {
       const childId = childLoginSelect.value;
-      if (!childId) {
-        showToast("目前沒有孩子可以登入");
-        return;
-      }
-
+      if (!childId) return showToast("目前沒有孩子");
       currentChildId = childId;
       renderAll();
-    });
-
-    closeRewardBtn.addEventListener("click", () => {
-      rewardBox.style.display = "none";
-    });
-
-    rewardBox.addEventListener("click", event => {
-      if (event.target === rewardBox) {
-        rewardBox.style.display = "none";
-      }
+      showToast("已進入孩子介面");
     });
 
     loadData();

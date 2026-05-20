@@ -1,7 +1,7 @@
 {
   "name": "family-task-server-app",
-  "version": "1.1.0",
-  "description": "家庭任務管理 Server App",
+  "version": "1.2.0",
+  "description": "家庭任務積分與獎勵商店 App",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
