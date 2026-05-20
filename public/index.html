@@ -7,7 +7,7 @@
   <style>
     :root {
       --bg: #f5f7f2;
-      --panel: #ffffff;
+      --panel: #fff;
       --ink: #222c28;
       --muted: #68746f;
       --line: #dbe3dd;
@@ -21,7 +21,6 @@
     }
 
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       min-height: 100vh;
@@ -29,41 +28,16 @@
       color: var(--ink);
       font-family: "Microsoft JhengHei", "Noto Sans TC", Arial, sans-serif;
     }
-
-    header {
-      background: #173f45;
-      color: white;
-      padding: 22px 5vw;
-    }
-
-    .header-inner, .shell {
-      width: min(1120px, 92vw);
-      margin: 0 auto;
-    }
-
-    .header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
+    header { background: #173f45; color: white; padding: 22px 5vw; }
+    .header-inner, .shell { width: min(1120px, 92vw); margin: 0 auto; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
     h1, h2, h3, p { margin-top: 0; }
     h1 { margin-bottom: 4px; font-size: 28px; letter-spacing: 0; }
     h2 { margin-bottom: 14px; font-size: 21px; }
     h3 { margin-bottom: 10px; font-size: 17px; }
-    header p { margin-bottom: 0; color: rgba(255, 255, 255, 0.78); }
-
+    header p { margin-bottom: 0; color: rgba(255,255,255,.78); }
     .shell { margin-top: 20px; margin-bottom: 42px; }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
     .segmented {
       display: inline-grid;
       grid-template-columns: 1fr 1fr;
@@ -73,41 +47,19 @@
       border-radius: 8px;
       background: #eef2ec;
     }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 16px;
-      align-items: start;
-    }
-
-    .two-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      align-items: start;
-    }
-
+    .grid { display: grid; grid-template-columns: 320px 1fr; gap: 16px; align-items: start; }
+    .two-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
     .panel, .item, .task {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
       box-shadow: var(--shadow);
     }
-
     .panel { padding: 18px; }
     .item, .task { padding: 14px; box-shadow: none; }
-
     .stack { display: grid; gap: 12px; }
     .hidden { display: none !important; }
-
-    label {
-      display: block;
-      margin: 12px 0 6px;
-      font-size: 14px;
-      font-weight: 800;
-    }
-
+    label { display: block; margin: 12px 0 6px; font-size: 14px; font-weight: 800; }
     input, textarea, select {
       width: 100%;
       min-height: 42px;
@@ -118,9 +70,7 @@
       color: var(--ink);
       font: inherit;
     }
-
     textarea { min-height: 76px; resize: vertical; }
-
     button {
       min-height: 40px;
       border: 0;
@@ -132,64 +82,22 @@
       font-weight: 800;
       cursor: pointer;
     }
-
     button:hover { background: var(--primary-dark); }
-    button:disabled { cursor: not-allowed; opacity: 0.55; }
-
-    .btn-light {
-      border: 1px solid var(--line);
-      background: white;
-      color: var(--primary);
-    }
-
+    button:disabled { cursor: not-allowed; opacity: .55; }
+    .btn-light { border: 1px solid var(--line); background: white; color: var(--primary); }
     .btn-light:hover { background: var(--soft); }
     .btn-red { background: var(--red); }
     .btn-red:hover { background: #943d37; }
     .btn-green { background: var(--green); }
     .btn-green:hover { background: #276846; }
     .active-btn { background: var(--primary); color: white; }
-
-    .row, .between {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
+    .row, .between { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .between { justify-content: space-between; }
-
-    .muted {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.55;
-    }
-
-    .divider {
-      height: 1px;
-      margin: 18px 0;
-      background: var(--line);
-    }
-
-    .child-button {
-      width: 100%;
-      text-align: left;
-      border: 1px solid var(--line);
-      background: #fbfcfa;
-      color: var(--ink);
-    }
-
-    .child-button.active, .child-button:hover {
-      border-color: var(--primary);
-      background: var(--soft);
-    }
-
-    .metric {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
+    .muted { color: var(--muted); font-size: 14px; line-height: 1.55; }
+    .divider { height: 1px; margin: 18px 0; background: var(--line); }
+    .child-button { width: 100%; text-align: left; border: 1px solid var(--line); background: #fbfcfa; color: var(--ink); }
+    .child-button.active, .child-button:hover { border-color: var(--primary); background: var(--soft); }
+    .metric { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
     .metric-box {
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -198,16 +106,8 @@
       text-align: center;
       color: var(--muted);
     }
-
-    .metric-box b {
-      display: block;
-      margin-bottom: 4px;
-      color: var(--primary);
-      font-size: 28px;
-      line-height: 1;
-    }
-
-    .points {
+    .metric-box b { display: block; margin-bottom: 4px; color: var(--primary); font-size: 28px; line-height: 1; }
+    .points, .status {
       display: inline-flex;
       align-items: center;
       border-radius: 999px;
@@ -217,38 +117,13 @@
       font-size: 13px;
       font-weight: 900;
     }
-
-    .status {
-      display: inline-flex;
-      align-items: center;
-      border-radius: 999px;
-      padding: 4px 10px;
-      background: #fff3d7;
-      color: #78510c;
-      font-size: 13px;
-      font-weight: 900;
-    }
-
     .status.done { background: #dff3e6; color: #276846; }
-
-    .task {
-      display: grid;
-      gap: 9px;
-      margin-top: 12px;
-    }
-
+    .fine-tag { background: #fde5e1; color: #8f352e; }
+    .task { display: grid; gap: 9px; margin-top: 12px; }
     .task.done { background: #f4fbf6; border-color: #b9dcc6; }
     .task-title, .item-title { font-size: 17px; font-weight: 900; overflow-wrap: anywhere; }
     .task p, .item p { margin: 0; color: var(--muted); line-height: 1.55; overflow-wrap: anywhere; }
-
-    .photo {
-      width: 100%;
-      max-height: 260px;
-      object-fit: cover;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-    }
-
+    .photo { width: 100%; max-height: 260px; object-fit: cover; border: 1px solid var(--line); border-radius: 8px; }
     .empty {
       border: 1px dashed #c9d3cb;
       border-radius: 8px;
@@ -257,7 +132,6 @@
       color: var(--muted);
       line-height: 1.55;
     }
-
     .hero-points {
       border-radius: 8px;
       padding: 20px;
@@ -265,15 +139,7 @@
       border: 1px solid #f1d18a;
       color: #6d4a0b;
     }
-
-    .hero-points b {
-      display: block;
-      margin-top: 4px;
-      font-size: 40px;
-      line-height: 1;
-      color: var(--gold);
-    }
-
+    .hero-points b { display: block; margin-top: 4px; font-size: 40px; line-height: 1; color: var(--gold); }
     .toast {
       position: fixed;
       right: 18px;
@@ -288,7 +154,6 @@
       z-index: 30;
       line-height: 1.5;
     }
-
     @media (max-width: 900px) {
       .header-inner, .topbar { align-items: stretch; flex-direction: column; }
       .grid, .two-grid, .metric { grid-template-columns: 1fr; }
@@ -302,7 +167,7 @@
     <div class="header-inner">
       <div>
         <h1>家庭任務積分</h1>
-        <p>完成任務拿積分，累積後到商店兌換獎勵。</p>
+        <p>完成任務拿積分，表現不佳也能記罰單。</p>
       </div>
       <button id="refreshBtn" class="btn-light" type="button">重新整理</button>
     </div>
@@ -331,9 +196,7 @@
             <input id="managerPasswordInput" type="password" placeholder="至少 4 碼">
           </div>
         </div>
-        <div class="row" style="margin-top: 12px;">
-          <button id="managerLoginBtn" type="button">進入家長介面</button>
-        </div>
+        <button id="managerLoginBtn" type="button" style="margin-top: 12px;">進入家長介面</button>
       </div>
 
       <div id="managerDashboard" class="hidden">
@@ -343,11 +206,9 @@
               <h2>孩子</h2>
               <button id="managerLogoutBtn" class="btn-light" type="button">登出</button>
             </div>
-
             <label for="childNameInput">新增孩子</label>
             <input id="childNameInput" type="text" maxlength="120" placeholder="孩子名稱">
             <button id="addChildBtn" type="button" style="margin-top: 10px;">新增</button>
-
             <div class="divider"></div>
             <div id="childListForManager" class="stack"></div>
           </aside>
@@ -363,32 +224,47 @@
                 <div class="metric">
                   <div class="metric-box"><b id="childPointCount">0</b>目前積分</div>
                   <div class="metric-box"><b id="totalCount">0</b>任務</div>
-                  <div class="metric-box"><b id="doneCount">0</b>完成</div>
+                  <div class="metric-box"><b id="fineCount">0</b>罰單</div>
                 </div>
 
-                <h3>派任務</h3>
                 <div class="two-grid">
                   <div>
+                    <h3>派任務</h3>
                     <label for="taskNameInput">任務名稱</label>
                     <input id="taskNameInput" type="text" maxlength="120" placeholder="例如：整理書桌">
-                  </div>
-                  <div>
-                    <label for="taskPointsInput">此次任務積分</label>
+                    <label for="taskPointsInput">任務積分</label>
                     <input id="taskPointsInput" type="number" min="1" step="1" value="5">
+                    <label for="taskNoteInput">說明</label>
+                    <textarea id="taskNoteInput" maxlength="500" placeholder="簡短說明即可"></textarea>
+                    <label for="needPhotoSelect">照片</label>
+                    <select id="needPhotoSelect">
+                      <option value="no">不需要</option>
+                      <option value="yes">需要上傳照片</option>
+                    </select>
+                    <button id="sendTaskBtn" type="button" style="margin-top: 12px;">送出任務</button>
+                  </div>
+
+                  <div>
+                    <h3>開罰單</h3>
+                    <label for="finePointsInput">扣幾分</label>
+                    <input id="finePointsInput" type="number" min="1" step="1" value="3">
+                    <label for="fineReasonInput">原因</label>
+                    <textarea id="fineReasonInput" maxlength="500" placeholder="例如：沒有收玩具"></textarea>
+                    <button id="addFineBtn" class="btn-red" type="button" style="margin-top: 12px;">直接扣分</button>
                   </div>
                 </div>
-                <label for="taskNoteInput">說明</label>
-                <textarea id="taskNoteInput" maxlength="500" placeholder="簡短說明即可"></textarea>
-                <label for="needPhotoSelect">照片</label>
-                <select id="needPhotoSelect">
-                  <option value="no">不需要</option>
-                  <option value="yes">需要上傳照片</option>
-                </select>
-                <button id="sendTaskBtn" type="button" style="margin-top: 12px;">送出任務</button>
 
                 <div class="divider"></div>
-                <h3>任務列表</h3>
-                <div id="managerTaskList"></div>
+                <div class="two-grid">
+                  <div>
+                    <h3>任務列表</h3>
+                    <div id="managerTaskList"></div>
+                  </div>
+                  <div>
+                    <h3>罰單紀錄</h3>
+                    <div id="managerFineList" class="stack"></div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -411,7 +287,6 @@
                 <textarea id="shopDescriptionInput" maxlength="500" placeholder="可留空"></textarea>
                 <button id="addShopItemBtn" type="button" style="margin-top: 12px;">上架</button>
               </div>
-
               <div class="panel">
                 <h2>商店商品</h2>
                 <div id="managerShopList" class="stack"></div>
@@ -445,7 +320,10 @@
             <h2 id="childTitle">我的任務</h2>
             <div id="childTaskList" class="empty">請先選擇孩子</div>
           </div>
-
+          <div class="panel">
+            <h2>我的罰單</h2>
+            <div id="childFineList" class="stack"></div>
+          </div>
           <div class="panel">
             <h2>獎勵商店</h2>
             <div id="childShopList" class="stack"></div>
@@ -458,7 +336,7 @@
   <div id="toast" class="toast" role="status"></div>
 
   <script>
-    let appData = { managerName: "", hasManagerPassword: false, children: [], shop: [], redemptions: [] };
+    let appData = { managerName: "", hasManagerPassword: false, children: [], shop: [], redemptions: [], fines: [] };
     let managerPassword = sessionStorage.getItem("managerPassword") || "";
     let managerUnlocked = Boolean(managerPassword);
     let selectedChildId = "";
@@ -466,14 +344,12 @@
     let toastTimer = null;
 
     const $ = id => document.getElementById(id);
-
     const managerModeBtn = $("managerModeBtn");
     const childModeBtn = $("childModeBtn");
     const managerPage = $("managerPage");
     const childPage = $("childPage");
     const refreshBtn = $("refreshBtn");
     const lastUpdatedText = $("lastUpdatedText");
-
     const managerLoginPanel = $("managerLoginPanel");
     const managerDashboard = $("managerDashboard");
     const managerLoginHint = $("managerLoginHint");
@@ -481,7 +357,6 @@
     const managerPasswordInput = $("managerPasswordInput");
     const managerLoginBtn = $("managerLoginBtn");
     const managerLogoutBtn = $("managerLogoutBtn");
-
     const childNameInput = $("childNameInput");
     const addChildBtn = $("addChildBtn");
     const childListForManager = $("childListForManager");
@@ -490,14 +365,17 @@
     const managerWorkArea = $("managerWorkArea");
     const childPointCount = $("childPointCount");
     const totalCount = $("totalCount");
-    const doneCount = $("doneCount");
+    const fineCount = $("fineCount");
     const taskNameInput = $("taskNameInput");
     const taskPointsInput = $("taskPointsInput");
     const taskNoteInput = $("taskNoteInput");
     const needPhotoSelect = $("needPhotoSelect");
     const sendTaskBtn = $("sendTaskBtn");
     const managerTaskList = $("managerTaskList");
-
+    const finePointsInput = $("finePointsInput");
+    const fineReasonInput = $("fineReasonInput");
+    const addFineBtn = $("addFineBtn");
+    const managerFineList = $("managerFineList");
     const shopNameInput = $("shopNameInput");
     const shopCostInput = $("shopCostInput");
     const shopStockInput = $("shopStockInput");
@@ -505,13 +383,13 @@
     const addShopItemBtn = $("addShopItemBtn");
     const managerShopList = $("managerShopList");
     const redemptionList = $("redemptionList");
-
     const childLoginSelect = $("childLoginSelect");
     const childLoginBtn = $("childLoginBtn");
     const childPointBox = $("childPointBox");
     const childPointText = $("childPointText");
     const childTitle = $("childTitle");
     const childTaskList = $("childTaskList");
+    const childFineList = $("childFineList");
     const childShopList = $("childShopList");
     const toast = $("toast");
 
@@ -564,6 +442,10 @@
       return appData.children.find(child => child.id === currentChildId);
     }
 
+    function finesForChild(childId) {
+      return appData.fines.filter(fine => fine.childId === childId);
+    }
+
     function switchMode(mode) {
       const manager = mode === "manager";
       managerPage.classList.toggle("hidden", !manager);
@@ -601,14 +483,14 @@
         childListForManager.appendChild(textNode("div", "empty", "還沒有孩子"));
         return;
       }
-
       appData.children.forEach(child => {
         const done = child.tasks.filter(task => task.done).length;
+        const fines = finesForChild(child.id).length;
         const button = document.createElement("button");
         button.type = "button";
         button.className = child.id === selectedChildId ? "child-button active" : "child-button";
         button.appendChild(textNode("div", "task-title", child.name));
-        button.appendChild(textNode("div", "muted", `${child.points} 分 · 任務 ${child.tasks.length} · 完成 ${done}`));
+        button.appendChild(textNode("div", "muted", `${child.points} 分 · 任務 ${child.tasks.length} · 完成 ${done} · 罰單 ${fines}`));
         button.addEventListener("click", () => {
           selectedChildId = child.id;
           renderAll();
@@ -625,21 +507,37 @@
         deleteChildBtn.classList.add("hidden");
         return;
       }
-
+      const fines = finesForChild(child.id);
       selectedChildTitle.textContent = child.name;
       managerWorkArea.classList.remove("hidden");
       deleteChildBtn.classList.remove("hidden");
       childPointCount.textContent = child.points;
       totalCount.textContent = child.tasks.length;
-      doneCount.textContent = child.tasks.filter(task => task.done).length;
+      fineCount.textContent = fines.length;
 
       empty(managerTaskList);
       if (!child.tasks.length) {
         managerTaskList.appendChild(textNode("div", "empty", "目前沒有任務"));
+      } else {
+        child.tasks.forEach(task => managerTaskList.appendChild(taskCard(child, task, "manager")));
+      }
+      renderFineList(managerFineList, fines);
+    }
+
+    function renderFineList(container, fines) {
+      empty(container);
+      if (!fines.length) {
+        container.appendChild(textNode("div", "empty", "目前沒有罰單"));
         return;
       }
-
-      child.tasks.forEach(task => managerTaskList.appendChild(taskCard(child, task, "manager")));
+      fines.forEach(fine => {
+        const card = document.createElement("div");
+        card.className = "item";
+        card.appendChild(textNode("div", "item-title", `扣 ${fine.points} 分`));
+        card.appendChild(textNode("p", "", fine.reason));
+        card.appendChild(textNode("p", "muted", `${fine.createdAt} · 實扣 ${fine.deducted} 分`));
+        container.appendChild(card);
+      });
     }
 
     function renderManagerShop() {
@@ -648,7 +546,6 @@
         managerShopList.appendChild(textNode("div", "empty", "尚未上架商品"));
         return;
       }
-
       appData.shop.forEach(item => {
         const card = document.createElement("div");
         card.className = "item";
@@ -675,7 +572,6 @@
         redemptionList.appendChild(textNode("div", "empty", "還沒有兌換紀錄"));
         return;
       }
-
       appData.redemptions.forEach(record => {
         const item = document.createElement("div");
         item.className = "item";
@@ -694,7 +590,6 @@
         childLoginSelect.appendChild(option);
         return;
       }
-
       appData.children.forEach(child => {
         const option = document.createElement("option");
         option.value = child.id;
@@ -708,12 +603,14 @@
       const child = getCurrentChild();
       childPointBox.classList.toggle("hidden", !child);
       empty(childTaskList);
+      empty(childFineList);
       empty(childShopList);
 
       if (!child) {
         childTitle.textContent = "我的任務";
         childTaskList.className = "empty";
         childTaskList.textContent = "請先選擇孩子";
+        childFineList.appendChild(textNode("div", "empty", "請先選擇孩子"));
         childShopList.appendChild(textNode("div", "empty", "請先選擇孩子"));
         return;
       }
@@ -721,13 +618,13 @@
       childPointText.textContent = child.points;
       childTitle.textContent = `${child.name} 的任務`;
       childTaskList.className = "";
-
       if (!child.tasks.length) {
         childTaskList.className = "empty";
         childTaskList.textContent = "目前沒有任務";
       } else {
         child.tasks.forEach(task => childTaskList.appendChild(taskCard(child, task, "child")));
       }
+      renderFineList(childFineList, finesForChild(child.id));
 
       const activeShop = appData.shop.filter(item => item.active);
       if (!activeShop.length) {
@@ -748,7 +645,6 @@
       meta.appendChild(textNode("span", task.done ? "status done" : "status", task.done ? "已完成" : "待完成"));
       meta.appendChild(textNode("span", "muted", task.needPhoto === "yes" ? "需要照片" : "不需照片"));
       card.appendChild(meta);
-
       if (task.completedAt) card.appendChild(textNode("p", "", `完成：${task.completedAt}`));
       if (task.photo) {
         const img = document.createElement("img");
@@ -782,7 +678,6 @@
           input.addEventListener("change", event => uploadPhoto(child.id, task.id, event));
           card.appendChild(input);
         }
-
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "btn-green";
@@ -790,7 +685,6 @@
         btn.addEventListener("click", () => finishTask(child.id, task.id));
         card.appendChild(btn);
       }
-
       return card;
     }
 
@@ -847,11 +741,7 @@
 
     managerLoginBtn.addEventListener("click", async () => {
       const password = managerPasswordInput.value.trim();
-      if (!password) {
-        showToast("請輸入家長密碼");
-        return;
-      }
-
+      if (!password) return showToast("請輸入家長密碼");
       try {
         if (!appData.hasManagerPassword) {
           const managerName = managerNameInput.value.trim();
@@ -868,7 +758,6 @@
             body: JSON.stringify({ password })
           });
         }
-
         managerPassword = password;
         sessionStorage.setItem("managerPassword", password);
         managerUnlocked = true;
@@ -923,7 +812,6 @@
       if (!child) return showToast("請先選擇孩子");
       const name = taskNameInput.value.trim();
       if (!name) return showToast("請輸入任務名稱");
-
       await runAction(() => api(`/api/children/${child.id}/tasks`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -934,17 +822,29 @@
           needPhoto: needPhotoSelect.value
         })
       }), "任務已送出");
-
       taskNameInput.value = "";
       taskNoteInput.value = "";
       taskPointsInput.value = "5";
       needPhotoSelect.value = "no";
     });
 
+    addFineBtn.addEventListener("click", async () => {
+      const child = getSelectedChild();
+      if (!child) return showToast("請先選擇孩子");
+      const reason = fineReasonInput.value.trim();
+      if (!reason) return showToast("請輸入罰單原因");
+      await runAction(() => api(`/api/children/${child.id}/fines`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ points: finePointsInput.value, reason })
+      }), "罰單已建立，積分已扣除");
+      fineReasonInput.value = "";
+      finePointsInput.value = "3";
+    });
+
     addShopItemBtn.addEventListener("click", async () => {
       const name = shopNameInput.value.trim();
       if (!name) return showToast("請輸入商品名稱");
-
       await runAction(() => api("/api/shop", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -955,7 +855,6 @@
           stock: shopStockInput.value
         })
       }), "商品已上架");
-
       shopNameInput.value = "";
       shopDescriptionInput.value = "";
       shopCostInput.value = "20";

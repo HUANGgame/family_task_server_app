@@ -6,9 +6,9 @@ const multer = require("multer");
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
-
 const DATA_FILE = path.join(__dirname, "data.json");
 const UPLOAD_DIR = path.join(__dirname, "public", "uploads");
+
 const MAX_TEXT_LENGTH = 120;
 const MAX_NOTE_LENGTH = 500;
 
@@ -18,14 +18,9 @@ function defaultData() {
     managerPassword: "",
     children: [],
     shop: [],
-    redemptions: []
+    redemptions: [],
+    fines: []
   };
-}
-
-function ensureDirectories() {
-  if (!fs.existsSync(UPLOAD_DIR)) {
-    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-  }
 }
 
 function makeId() {
@@ -42,15 +37,36 @@ function nowText() {
   }).format(new Date());
 }
 
-function text(value, maxLength = MAX_TEXT_LENGTH) {
+function cleanText(value, maxLength = MAX_TEXT_LENGTH) {
   if (typeof value !== "string") return "";
   return value.trim().slice(0, maxLength);
 }
 
-function numberValue(value, fallback = 0) {
+function cleanNumber(value, fallback = 0) {
   const parsed = Number(value);
   if (!Number.isFinite(parsed)) return fallback;
   return Math.max(0, Math.floor(parsed));
+}
+
+function ensureDirectories() {
+  if (!fs.existsSync(UPLOAD_DIR)) {
+    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+  }
+}
+
+function normalizeTask(task) {
+  return {
+    id: String(task.id || makeId()),
+    name: cleanText(task.name) || "未命名任務",
+    note: cleanText(task.note, MAX_NOTE_LENGTH) || "沒有補充說明",
+    needPhoto: task.needPhoto === "yes" ? "yes" : "no",
+    points: cleanNumber(task.points, 1) || 1,
+    done: Boolean(task.done),
+    rewarded: Boolean(task.rewarded || task.done),
+    photo: typeof task.photo === "string" ? task.photo : "",
+    createdAt: typeof task.createdAt === "string" ? task.createdAt : nowText(),
+    completedAt: typeof task.completedAt === "string" ? task.completedAt : ""
+  };
 }
 
 function normalizeData(input) {
@@ -58,43 +74,42 @@ function normalizeData(input) {
   const children = Array.isArray(source.children) ? source.children : [];
   const shop = Array.isArray(source.shop) ? source.shop : [];
   const redemptions = Array.isArray(source.redemptions) ? source.redemptions : [];
+  const fines = Array.isArray(source.fines) ? source.fines : [];
 
   return {
-    managerName: text(source.managerName),
+    managerName: cleanText(source.managerName),
     managerPassword: typeof source.managerPassword === "string" ? source.managerPassword : "",
     children: children.map(child => ({
       id: String(child.id || makeId()),
-      name: text(child.name) || "未命名孩子",
-      points: numberValue(child.points, 0),
-      tasks: Array.isArray(child.tasks) ? child.tasks.map(task => ({
-        id: String(task.id || makeId()),
-        name: text(task.name) || "未命名任務",
-        note: text(task.note, MAX_NOTE_LENGTH) || "沒有補充說明",
-        needPhoto: task.needPhoto === "yes" ? "yes" : "no",
-        points: numberValue(task.points, 1),
-        done: Boolean(task.done),
-        rewarded: Boolean(task.rewarded || task.done),
-        photo: typeof task.photo === "string" ? task.photo : "",
-        createdAt: typeof task.createdAt === "string" ? task.createdAt : nowText(),
-        completedAt: typeof task.completedAt === "string" ? task.completedAt : ""
-      })) : []
+      name: cleanText(child.name) || "未命名孩子",
+      points: cleanNumber(child.points, 0),
+      tasks: Array.isArray(child.tasks) ? child.tasks.map(normalizeTask) : []
     })),
     shop: shop.map(item => ({
       id: String(item.id || makeId()),
-      name: text(item.name) || "未命名商品",
-      description: text(item.description, MAX_NOTE_LENGTH),
-      cost: numberValue(item.cost, 1),
-      stock: numberValue(item.stock, 1),
+      name: cleanText(item.name) || "未命名商品",
+      description: cleanText(item.description, MAX_NOTE_LENGTH),
+      cost: cleanNumber(item.cost, 1) || 1,
+      stock: cleanNumber(item.stock, 1),
       active: item.active !== false,
       createdAt: typeof item.createdAt === "string" ? item.createdAt : nowText()
     })),
     redemptions: redemptions.map(record => ({
       id: String(record.id || makeId()),
       childId: String(record.childId || ""),
-      childName: text(record.childName) || "未知孩子",
+      childName: cleanText(record.childName) || "未知孩子",
       itemId: String(record.itemId || ""),
-      itemName: text(record.itemName) || "未知商品",
-      cost: numberValue(record.cost, 0),
+      itemName: cleanText(record.itemName) || "未知商品",
+      cost: cleanNumber(record.cost, 0),
+      createdAt: typeof record.createdAt === "string" ? record.createdAt : nowText()
+    })),
+    fines: fines.map(record => ({
+      id: String(record.id || makeId()),
+      childId: String(record.childId || ""),
+      childName: cleanText(record.childName) || "未知孩子",
+      points: cleanNumber(record.points, 0),
+      deducted: cleanNumber(record.deducted, record.points || 0),
+      reason: cleanText(record.reason, MAX_NOTE_LENGTH) || "沒有填寫原因",
       createdAt: typeof record.createdAt === "string" ? record.createdAt : nowText()
     }))
   };
@@ -102,10 +117,7 @@ function normalizeData(input) {
 
 function readData() {
   try {
-    if (!fs.existsSync(DATA_FILE)) {
-      writeData(defaultData());
-    }
-
+    if (!fs.existsSync(DATA_FILE)) writeData(defaultData());
     const raw = fs.readFileSync(DATA_FILE, "utf8");
     return normalizeData(raw ? JSON.parse(raw) : defaultData());
   } catch (error) {
@@ -125,27 +137,9 @@ function publicData(data) {
     hasManagerPassword: Boolean(normalized.managerPassword),
     children: normalized.children,
     shop: normalized.shop,
-    redemptions: normalized.redemptions
+    redemptions: normalized.redemptions,
+    fines: normalized.fines
   };
-}
-
-function managerPasswordFromRequest(req) {
-  return String(req.headers["x-manager-password"] || req.body.managerPassword || "");
-}
-
-function requireManager(req, res, next) {
-  const data = readData();
-  if (!data.managerPassword) {
-    req.appData = data;
-    return next();
-  }
-
-  if (managerPasswordFromRequest(req) !== data.managerPassword) {
-    return res.status(401).json({ message: "家長密碼不正確" });
-  }
-
-  req.appData = data;
-  next();
 }
 
 function findChild(data, childId) {
@@ -158,6 +152,19 @@ function findTask(child, taskId) {
 
 function findShopItem(data, itemId) {
   return data.shop.find(item => item.id === itemId);
+}
+
+function managerPasswordFromRequest(req) {
+  return String(req.headers["x-manager-password"] || req.body.managerPassword || "");
+}
+
+function requireManager(req, res, next) {
+  const data = readData();
+  if (!data.managerPassword || managerPasswordFromRequest(req) === data.managerPassword) {
+    req.appData = data;
+    return next();
+  }
+  return res.status(401).json({ message: "家長密碼不正確" });
 }
 
 ensureDirectories();
@@ -194,72 +201,54 @@ app.get("/api/data", (req, res) => {
 app.post("/api/manager/login", (req, res) => {
   const password = String(req.body.password || "");
   const data = readData();
-
-  if (!data.managerPassword) {
-    return res.json({ ok: true, needsSetup: true });
-  }
-
+  if (!data.managerPassword) return res.json({ ok: true, needsSetup: true });
   if (password !== data.managerPassword) {
     return res.status(401).json({ message: "家長密碼不正確" });
   }
-
   res.json({ ok: true, managerName: data.managerName });
 });
 
 app.put("/api/manager", requireManager, (req, res) => {
-  const managerName = text(req.body.managerName);
-  const managerPassword = String(req.body.newPassword || req.body.managerPassword || "").trim();
+  const managerName = cleanText(req.body.managerName);
+  const nextPassword = String(req.body.newPassword || req.body.managerPassword || "").trim();
 
-  if (!managerName) {
-    return res.status(400).json({ message: "請輸入家長名稱" });
-  }
-
-  if (!req.appData.managerPassword && managerPassword.length < 4) {
+  if (!managerName) return res.status(400).json({ message: "請輸入家長名稱" });
+  if (!req.appData.managerPassword && nextPassword.length < 4) {
     return res.status(400).json({ message: "第一次設定請輸入至少 4 碼密碼" });
   }
 
   req.appData.managerName = managerName;
-  if (managerPassword) req.appData.managerPassword = managerPassword;
+  if (nextPassword) req.appData.managerPassword = nextPassword;
   writeData(req.appData);
   res.json(publicData(req.appData));
 });
 
 app.post("/api/children", requireManager, (req, res) => {
-  const name = text(req.body.name);
-  if (!name) {
-    return res.status(400).json({ message: "請輸入孩子名稱" });
-  }
+  const name = cleanText(req.body.name);
+  if (!name) return res.status(400).json({ message: "請輸入孩子名稱" });
 
-  const child = {
-    id: makeId(),
-    name,
-    points: 0,
-    tasks: []
-  };
-
+  const child = { id: makeId(), name, points: 0, tasks: [] };
   req.appData.children.push(child);
   writeData(req.appData);
   res.status(201).json(child);
 });
 
 app.delete("/api/children/:childId", requireManager, (req, res) => {
-  const beforeCount = req.appData.children.length;
+  const before = req.appData.children.length;
   req.appData.children = req.appData.children.filter(child => child.id !== req.params.childId);
-
-  if (req.appData.children.length === beforeCount) {
+  if (req.appData.children.length === before) {
     return res.status(404).json({ message: "找不到這位孩子" });
   }
-
   writeData(req.appData);
   res.json(publicData(req.appData));
 });
 
 app.post("/api/children/:childId/tasks", requireManager, (req, res) => {
-  const name = text(req.body.name);
-  const note = text(req.body.note, MAX_NOTE_LENGTH);
-  const needPhoto = req.body.needPhoto === "yes" ? "yes" : "no";
-  const points = numberValue(req.body.points, 1);
   const child = findChild(req.appData, req.params.childId);
+  const name = cleanText(req.body.name);
+  const note = cleanText(req.body.note, MAX_NOTE_LENGTH);
+  const points = cleanNumber(req.body.points, 1);
+  const needPhoto = req.body.needPhoto === "yes" ? "yes" : "no";
 
   if (!child) return res.status(404).json({ message: "找不到這位孩子" });
   if (!name) return res.status(400).json({ message: "請輸入任務名稱" });
@@ -286,49 +275,59 @@ app.post("/api/children/:childId/tasks", requireManager, (req, res) => {
 app.delete("/api/children/:childId/tasks/:taskId", requireManager, (req, res) => {
   const child = findChild(req.appData, req.params.childId);
   if (!child) return res.status(404).json({ message: "找不到這位孩子" });
-
-  const beforeCount = child.tasks.length;
+  const before = child.tasks.length;
   child.tasks = child.tasks.filter(task => task.id !== req.params.taskId);
-  if (child.tasks.length === beforeCount) {
-    return res.status(404).json({ message: "找不到這個任務" });
-  }
-
+  if (child.tasks.length === before) return res.status(404).json({ message: "找不到這個任務" });
   writeData(req.appData);
   res.json(publicData(req.appData));
 });
 
+app.post("/api/children/:childId/fines", requireManager, (req, res) => {
+  const child = findChild(req.appData, req.params.childId);
+  const points = cleanNumber(req.body.points, 0);
+  const reason = cleanText(req.body.reason, MAX_NOTE_LENGTH);
+
+  if (!child) return res.status(404).json({ message: "找不到這位孩子" });
+  if (points < 1) return res.status(400).json({ message: "罰單至少要扣 1 分" });
+  if (!reason) return res.status(400).json({ message: "請輸入罰單原因" });
+
+  const deducted = Math.min(child.points, points);
+  child.points = Math.max(0, child.points - points);
+
+  const fine = {
+    id: makeId(),
+    childId: child.id,
+    childName: child.name,
+    points,
+    deducted,
+    reason,
+    createdAt: nowText()
+  };
+
+  req.appData.fines.unshift(fine);
+  writeData(req.appData);
+  res.status(201).json(fine);
+});
+
 app.post("/api/shop", requireManager, (req, res) => {
-  const name = text(req.body.name);
-  const description = text(req.body.description, MAX_NOTE_LENGTH);
-  const cost = numberValue(req.body.cost, 1);
-  const stock = numberValue(req.body.stock, 1);
+  const name = cleanText(req.body.name);
+  const description = cleanText(req.body.description, MAX_NOTE_LENGTH);
+  const cost = cleanNumber(req.body.cost, 1);
+  const stock = cleanNumber(req.body.stock, 1);
 
   if (!name) return res.status(400).json({ message: "請輸入商品名稱" });
   if (cost < 1) return res.status(400).json({ message: "商品積分至少要 1 分" });
 
-  const item = {
-    id: makeId(),
-    name,
-    description,
-    cost,
-    stock,
-    active: true,
-    createdAt: nowText()
-  };
-
+  const item = { id: makeId(), name, description, cost, stock, active: true, createdAt: nowText() };
   req.appData.shop.unshift(item);
   writeData(req.appData);
   res.status(201).json(item);
 });
 
 app.delete("/api/shop/:itemId", requireManager, (req, res) => {
-  const beforeCount = req.appData.shop.length;
+  const before = req.appData.shop.length;
   req.appData.shop = req.appData.shop.filter(item => item.id !== req.params.itemId);
-
-  if (req.appData.shop.length === beforeCount) {
-    return res.status(404).json({ message: "找不到這個商品" });
-  }
-
+  if (req.appData.shop.length === before) return res.status(404).json({ message: "找不到這個商品" });
   writeData(req.appData);
   res.json(publicData(req.appData));
 });
@@ -337,7 +336,6 @@ app.post("/api/children/:childId/tasks/:taskId/photo", upload.single("photo"), (
   const data = readData();
   const child = findChild(data, req.params.childId);
   if (!child) return res.status(404).json({ message: "找不到這位孩子" });
-
   const task = findTask(child, req.params.taskId);
   if (!task) return res.status(404).json({ message: "找不到這個任務" });
   if (!req.file) return res.status(400).json({ message: "請選擇要上傳的照片" });
@@ -351,7 +349,6 @@ app.put("/api/children/:childId/tasks/:taskId/finish", (req, res) => {
   const data = readData();
   const child = findChild(data, req.params.childId);
   if (!child) return res.status(404).json({ message: "找不到這位孩子" });
-
   const task = findTask(child, req.params.taskId);
   if (!task) return res.status(404).json({ message: "找不到這個任務" });
   if (task.needPhoto === "yes" && !task.photo) {
@@ -362,7 +359,6 @@ app.put("/api/children/:childId/tasks/:taskId/finish", (req, res) => {
     task.done = true;
     task.completedAt = nowText();
   }
-
   if (!task.rewarded) {
     child.points += task.points;
     task.rewarded = true;
@@ -384,7 +380,6 @@ app.post("/api/children/:childId/redeem/:itemId", (req, res) => {
 
   child.points -= item.cost;
   item.stock -= 1;
-
   const record = {
     id: makeId(),
     childId: child.id,
@@ -404,11 +399,7 @@ app.use((error, req, res, next) => {
   if (error instanceof multer.MulterError) {
     return res.status(400).json({ message: "照片大小不可超過 5MB" });
   }
-
-  if (error) {
-    return res.status(400).json({ message: error.message || "請求失敗" });
-  }
-
+  if (error) return res.status(400).json({ message: error.message || "請求失敗" });
   next();
 });
 
