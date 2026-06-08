@@ -227,7 +227,7 @@ app.post("/api/families", asyncRoute(async (req, res) => {
 }));
 
 app.post("/api/signup", asyncRoute(async (req, res) => {
-  const missing = assertFields(req.body, ["familyName", "managerName", "managerPassword", "childName"]);
+  const missing = assertFields(req.body, ["familyName", "managerName", "managerPassword", "childName", "recoveryAnswer"]);
   if (missing) return fail(res, 400, missing);
 
   const family = await createFamilyAccount(req.body);
@@ -268,13 +268,16 @@ app.post("/api/manager/login", asyncRoute(async (req, res) => {
 }));
 
 app.post("/api/manager/reset-password", asyncRoute(async (req, res) => {
-  const missing = assertFields(req.body, ["familyCode", "newPassword"]);
+  const missing = assertFields(req.body, ["familyCode", "recoveryAnswer", "newPassword"]);
   if (missing) return fail(res, 400, missing);
 
   const family = await getFamilyByCode(req.body.familyCode);
-  if (!family) {
+  if (!family || !family.recovery_answer_hash) {
     return fail(res, 401, "Password reset information is incorrect.");
   }
+
+  const valid = await bcrypt.compare(String(req.body.recoveryAnswer).trim().toLowerCase(), family.recovery_answer_hash);
+  if (!valid) return fail(res, 401, "Password reset information is incorrect.");
 
   const managerPasswordHash = await bcrypt.hash(req.body.newPassword, 12);
   const { error } = await supabase
