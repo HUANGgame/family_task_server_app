@@ -173,10 +173,12 @@ qs("#createFamilyForm").addEventListener("submit", async (event) => {
   const status = qs("#createStatus");
   setStatus(status, "Creating...");
   try {
-    const data = await api("/api/families", { method: "POST", body: formData(event.target) });
-    setStatus(status, `Created. Family Code: ${data.familyCode}`);
-    qs("#loginForm [name=familyCode]").value = data.familyCode;
-    setAuthMode("login");
+    const data = await api("/api/signup", { method: "POST", body: formData(event.target) });
+    managerStore.token = data.token;
+    managerState.familyCode = data.familyCode;
+    sessionStorage.setItem("manager:familyCode", data.familyCode);
+    setStatus(status, `已建立。Family Code: ${data.familyCode}，Child Code: ${data.child.childCode}`);
+    await refreshManagerData();
   } catch (error) {
     setStatus(status, error.message, true);
   }
@@ -301,11 +303,6 @@ qs("#aiForm").addEventListener("submit", async (event) => {
 });
 
 qs("#refreshDashboardBtn").addEventListener("click", refreshManagerData);
-qs("#logoutBtn").addEventListener("click", () => {
-  managerStore.clear();
-  sessionStorage.removeItem("manager:familyCode");
-  location.reload();
-});
 qs("#clearSessionBtn").addEventListener("click", () => {
   managerStore.clear();
   sessionStorage.removeItem("manager:familyCode");

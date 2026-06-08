@@ -133,6 +133,58 @@ async function getFamilyByCode(familyCode) {
   return data;
 }
 
+async function createFamilyAccount(body) {
+  const missing = assertFields(body, ["managerName", "managerPassword"]);
+  if (missing) {
+    const error = new Error(missing);
+    error.status = 400;
+    throw error;
+  }
+
+  const familyCode = await uniqueCode("families", "family_code", makeFamilyCode);
+  const managerHash = await bcrypt.hash(body.managerPassword, 12);
+  const answer = String(body.recoveryAnswer || "").trim();
+  const recoveryAnswerHash = answer ? await bcrypt.hash(answer.toLowerCase(), 12) : null;
+
+  const { data, error } = await supabase
+    .from("families")
+    .insert({
+      family_code: familyCode,
+      family_name: String(body.familyName || "").trim() || null,
+      manager_name: String(body.managerName).trim(),
+      manager_password_hash: managerHash,
+      recovery_question: String(body.recoveryQuestion || "").trim() || null,
+      recovery_answer_hash: recoveryAnswerHash
+    })
+    .select("id, family_code, manager_name")
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+async function createChildAccount(familyId, childName) {
+  if (!String(childName || "").trim()) {
+    const error = new Error("childName is required.");
+    error.status = 400;
+    throw error;
+  }
+
+  const childCode = await uniqueCode("children", "child_code", makeChildCode);
+  const { data, error } = await supabase
+    .from("children")
+    .insert({
+      family_id: familyId,
+      child_name: String(childName).trim(),
+      child_code: childCode
+    })
+    .select("id, child_name, child_code, points")
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
 async function getChildInFamily(familyId, childId) {
   const { data, error } = await supabase
     .from("children")
@@ -170,29 +222,35 @@ app.get("/child", (req, res) => res.sendFile(path.join(__dirname, "public", "chi
 app.get("/api/health", (req, res) => ok(res, { status: "running", env: NODE_ENV || "development" }));
 
 app.post("/api/families", asyncRoute(async (req, res) => {
-  const missing = assertFields(req.body, ["managerName", "managerPassword"]);
+  const family = await createFamilyAccount(req.body);
+  return ok(res, { familyCode: family.family_code, managerName: family.manager_name }, 201);
+}));
+
+app.post("/api/signup", asyncRoute(async (req, res) => {
+  const missing = assertFields(req.body, ["familyName", "managerName", "managerPassword", "childName"]);
   if (missing) return fail(res, 400, missing);
 
-  const familyCode = await uniqueCode("families", "family_code", makeFamilyCode);
-  const managerHash = await bcrypt.hash(req.body.managerPassword, 12);
-  const answer = String(req.body.recoveryAnswer || "").trim();
-  const recoveryAnswerHash = answer ? await bcrypt.hash(answer.toLowerCase(), 12) : null;
+  const family = await createFamilyAccount(req.body);
+  let child;
+  try {
+    child = await createChildAccount(family.id, req.body.childName);
+  } catch (error) {
+    await supabase.from("families").delete().eq("id", family.id);
+    throw error;
+  }
+  const managerToken = signToken({ family_id: family.id, role: "manager" });
 
-  const { data, error } = await supabase
-    .from("families")
-    .insert({
-      family_code: familyCode,
-      family_name: String(req.body.familyName || "").trim() || null,
-      manager_name: String(req.body.managerName).trim(),
-      manager_password_hash: managerHash,
-      recovery_question: String(req.body.recoveryQuestion || "").trim() || null,
-      recovery_answer_hash: recoveryAnswerHash
-    })
-    .select("family_code, manager_name")
-    .single();
-
-  if (error) throw error;
-  return ok(res, { familyCode: data.family_code, managerName: data.manager_name }, 201);
+  return ok(res, {
+    token: managerToken,
+    familyCode: family.family_code,
+    managerName: family.manager_name,
+    child: {
+      childId: child.id,
+      childName: child.child_name,
+      childCode: child.child_code,
+      points: child.points
+    }
+  }, 201);
 }));
 
 app.post("/api/manager/login", asyncRoute(async (req, res) => {
@@ -256,17 +314,7 @@ app.get("/api/manager/dashboard", requireManager, asyncRoute(async (req, res) =>
 }));
 
 app.post("/api/manager/children", requireManager, asyncRoute(async (req, res) => {
-  const missing = assertFields(req.body, ["childName"]);
-  if (missing) return fail(res, 400, missing);
-
-  const childCode = await uniqueCode("children", "child_code", makeChildCode);
-  const { data, error } = await supabase
-    .from("children")
-    .insert({ family_id: req.user.family_id, child_name: String(req.body.childName).trim(), child_code: childCode })
-    .select("id, child_name, child_code, points")
-    .single();
-
-  if (error) throw error;
+  const data = await createChildAccount(req.user.family_id, req.body.childName);
   return ok(res, { childId: data.id, childName: data.child_name, childCode: data.child_code, points: data.points }, 201);
 }));
 
@@ -611,6 +659,7 @@ app.post("/api/manager/ai-suggestion", requireManager, (req, res) => {
 
 app.use((error, req, res, next) => {
   console.error(error);
+  if (error.status) return fail(res, error.status, error.message);
   if (error instanceof multer.MulterError) return fail(res, 400, error.message);
   if (error.message === "Only image uploads are allowed.") return fail(res, 400, error.message);
   return fail(res, 500, "Server error. Check server logs for details.");

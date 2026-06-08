@@ -4,7 +4,9 @@ Node.js + Express family task app with static HTML/CSS/JavaScript screens, Supab
 
 ## Features
 
-- Manager creates a family and receives a generated `family_code`.
+- First screen is a focused account creation form with no extra landing content.
+- Signup creates a family, a manager account, and the first child account in one request.
+- Manager receives a generated `family_code`; the first child receives a generated `child_code`.
 - Manager login uses `family_code + manager_password`.
 - Child login uses `family_code + child_code`.
 - Manager can create/delete children, assign tasks, require photos, add fines, add shop items, and add encouragement messages.
@@ -124,6 +126,7 @@ Errors use:
 
 ### Public
 
+- `POST /api/signup`
 - `POST /api/families`
 - `POST /api/manager/login`
 - `POST /api/manager/reset-password`
@@ -170,11 +173,11 @@ Errors use:
 
 ## Manual Test Flow
 
-1. Open `/manager`.
-2. Create a family and copy the generated Family Code.
-3. Log in as manager.
-4. Add a child and copy the Child Code.
-5. Add tasks, shop items, fines, and encouragement messages.
+1. Open `/` or `/manager`.
+2. Create the family, manager account, and first child account from the initial form.
+3. Copy the generated Family Code and Child Code.
+4. Continue into manager mode.
+5. Add more children, tasks, shop items, fines, and encouragement messages.
 6. Open `/child`.
 7. Log in with Family Code and Child Code.
 8. Upload a photo for tasks that require one.

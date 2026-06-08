@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Child | Family Task Server App</title>
+    <title>兒童登入 | Family Task Server App</title>
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
@@ -11,12 +11,8 @@
       <header class="topbar">
         <a class="brand" href="/">
           <span class="brand-mark">FT</span>
-          <span>Child</span>
+          <span>兒童登入</span>
         </a>
-        <div class="nav-actions">
-          <a class="btn secondary" href="/manager">Manager</a>
-          <button class="btn danger" id="childLogoutBtn">Logout</button>
-        </div>
       </header>
 
       <section class="auth-box panel" id="childAuthPanel">
@@ -31,13 +27,13 @@
 
       <main class="app-grid hidden" id="childAppPanel">
         <aside class="sidebar">
-          <h2 id="childName">Child</h2>
-          <p class="muted small">Points</p>
+          <h2 id="childName">兒童</h2>
+          <p class="muted small">點數</p>
           <div class="stat"><strong id="childPoints">0</strong></div>
           <div class="tabs">
-            <button class="btn tab-btn active" data-tab="tasks">Tasks</button>
-            <button class="btn tab-btn" data-tab="shop">Shop</button>
-            <button class="btn tab-btn" data-tab="fines">Fines</button>
+            <button class="btn tab-btn active" data-tab="tasks">任務</button>
+            <button class="btn tab-btn" data-tab="shop">商店</button>
+            <button class="btn tab-btn" data-tab="fines">扣點紀錄</button>
           </div>
           <div class="danger-zone">
             <button class="btn danger" id="childClearSessionBtn">清除本機登入</button>
@@ -48,7 +44,7 @@
           <div class="panel">
             <div class="panel-head">
               <h2>今日鼓勵</h2>
-              <button class="btn secondary" id="encourageBtn">Refresh</button>
+              <button class="btn secondary" id="encourageBtn">重新整理</button>
             </div>
             <p id="encouragementText" class="muted">-</p>
           </div>
@@ -56,8 +52,8 @@
           <div class="view active" data-view="tasks">
             <div class="panel">
               <div class="panel-head">
-                <h2>Tasks</h2>
-                <button class="btn secondary" id="refreshChildBtn">Refresh</button>
+                <h2>任務</h2>
+                <button class="btn secondary" id="refreshChildBtn">重新整理</button>
               </div>
               <div class="list" id="childTasksList"></div>
             </div>
@@ -65,14 +61,14 @@
 
           <div class="view" data-view="shop">
             <div class="panel">
-              <div class="panel-head"><h2>Shop</h2></div>
+              <div class="panel-head"><h2>商店</h2></div>
               <div class="list" id="childShopList"></div>
             </div>
           </div>
 
           <div class="view" data-view="fines">
             <div class="panel">
-              <div class="panel-head"><h2>Fines</h2></div>
+              <div class="panel-head"><h2>扣點紀錄</h2></div>
               <div class="list" id="childFinesList"></div>
             </div>
           </div>

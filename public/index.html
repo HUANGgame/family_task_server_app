@@ -3,68 +3,57 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Family Task Server App</title>
+    <title>建立帳號 | Family Task Server App</title>
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
-    <div class="shell">
-      <header class="topbar">
-        <div class="brand">
-          <span class="brand-mark">FT</span>
-          <span>Family Task Server App</span>
-        </div>
-        <nav class="nav-actions">
-          <a class="btn secondary" href="/manager">Manager</a>
-          <a class="btn good" href="/child">Child</a>
-        </nav>
-      </header>
-
-      <main class="hero">
-        <section class="hero-panel">
+    <main class="signup-screen">
+      <section class="signup-card">
+        <div class="panel-head">
           <div>
-            <h1>Family Task Server App</h1>
-            <p>家長建立家庭與任務，孩子完成任務、上傳照片、累積點數並兌換獎勵。資料儲存在 Supabase PostgreSQL，照片存到 Supabase Storage，適合部署到 Render Web Service。</p>
-            <div class="button-row">
-              <a class="btn good" href="/manager">家長管理</a>
-              <a class="btn secondary" href="/child">孩子任務</a>
+            <h1>建立家庭帳號</h1>
+            <p class="muted">一次建立家長帳號與第一個兒童帳號。</p>
+          </div>
+        </div>
+
+        <form id="signupForm" class="signup-form">
+          <div class="form-grid">
+            <label class="form-row">家庭名稱<input name="familyName" required autocomplete="organization"></label>
+            <label class="form-row">家長名稱<input name="managerName" required autocomplete="name"></label>
+            <label class="form-row">家長密碼<input name="managerPassword" type="password" required autocomplete="new-password" minlength="6"></label>
+            <label class="form-row">兒童名稱<input name="childName" required autocomplete="off"></label>
+            <label class="form-row">密碼找回問題<input name="recoveryQuestion" placeholder="例如：最喜歡的家庭活動"></label>
+            <label class="form-row">密碼找回答案<input name="recoveryAnswer" autocomplete="off"></label>
+          </div>
+
+          <div class="button-row">
+            <button class="btn good" type="submit">建立帳號</button>
+            <span class="status" id="signupStatus"></span>
+          </div>
+        </form>
+
+        <div class="signup-result hidden" id="signupResult">
+          <h2>帳號已建立</h2>
+          <div class="result-grid">
+            <div class="stat">
+              <span class="muted small">Family Code</span>
+              <strong class="code" id="resultFamilyCode">-</strong>
+            </div>
+            <div class="stat">
+              <span class="muted small">兒童 Child Code</span>
+              <strong class="code" id="resultChildCode">-</strong>
             </div>
           </div>
-          <div class="hero-art" aria-label="task preview">
-            <div class="check-row">
-              <span class="check-icon">✓</span>
-              <div>
-                <strong>整理餐桌</strong>
-                <div class="small muted">需要照片</div>
-              </div>
-              <span class="points-pill">+3</span>
-            </div>
-            <div class="check-row">
-              <span class="check-icon">✓</span>
-              <div>
-                <strong>閱讀 15 分鐘</strong>
-                <div class="small muted">學習</div>
-              </div>
-              <span class="points-pill">+2</span>
-            </div>
-            <div class="check-row">
-              <span class="check-icon">○</span>
-              <div>
-                <strong>準備明天書包</strong>
-                <div class="small muted">生活</div>
-              </div>
-              <span class="points-pill">+1</span>
-            </div>
-            <div class="check-row">
-              <span class="check-icon">★</span>
-              <div>
-                <strong>兌換家庭電影夜</strong>
-                <div class="small muted">獎勵商店</div>
-              </div>
-              <span class="points-pill">20</span>
-            </div>
+          <p class="muted small">家長使用 Family Code + 家長密碼登入；兒童使用 Family Code + Child Code 登入。</p>
+          <div class="button-row">
+            <a class="btn good" href="/manager">進入家長管理</a>
+            <a class="btn secondary" href="/child">前往兒童登入</a>
           </div>
-        </section>
-      </main>
-    </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+    <script src="/signup.js"></script>
   </body>
 </html>

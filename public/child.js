@@ -152,10 +152,6 @@ qs("#childLoginForm").addEventListener("submit", async (event) => {
 
 qs("#refreshChildBtn").addEventListener("click", refreshChildData);
 qs("#encourageBtn").addEventListener("click", loadEncouragement);
-qs("#childLogoutBtn").addEventListener("click", () => {
-  childStore.clear();
-  location.reload();
-});
 qs("#childClearSessionBtn").addEventListener("click", () => {
   childStore.clear();
   location.reload();
