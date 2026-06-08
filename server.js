@@ -268,11 +268,11 @@ app.post("/api/manager/login", asyncRoute(async (req, res) => {
 }));
 
 app.post("/api/manager/reset-password", asyncRoute(async (req, res) => {
-  const missing = assertFields(req.body, ["familyCode", "managerName", "newPassword"]);
+  const missing = assertFields(req.body, ["familyCode", "newPassword"]);
   if (missing) return fail(res, 400, missing);
 
   const family = await getFamilyByCode(req.body.familyCode);
-  if (!family || family.manager_name !== String(req.body.managerName).trim()) {
+  if (!family) {
     return fail(res, 401, "Password reset information is incorrect.");
   }
 
