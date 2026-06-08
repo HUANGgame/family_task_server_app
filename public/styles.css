@@ -639,6 +639,26 @@ ruby.zh-char {
   font-size: 34px;
 }
 
+.child-account-card {
+  border-color: rgba(107, 170, 117, 0.45);
+}
+
+.child-code-display {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 118px;
+  min-height: 54px;
+  margin: 8px 0;
+  padding: 8px 14px;
+  border: 2px dashed var(--green);
+  border-radius: 8px;
+  background: white;
+  color: var(--ink);
+  font-size: 30px;
+  letter-spacing: 0.12em;
+}
+
 @media (max-width: 860px) {
   .shell {
     padding: 14px;

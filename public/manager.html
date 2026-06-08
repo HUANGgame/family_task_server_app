@@ -17,7 +17,7 @@
 
       <section class="auth-box panel" id="authPanel">
         <div class="auth-tabs">
-          <button class="btn good" data-auth="create">建立帳號</button>
+          <button class="btn good" data-auth="create">建立家庭</button>
           <button class="btn secondary" data-auth="login">家長登入</button>
           <button class="btn secondary" data-auth="reset">忘記密碼</button>
         </div>
@@ -25,15 +25,15 @@
         <form id="createFamilyForm" class="auth-form">
           <div class="panel-head">
             <div>
-              <h2>建立家庭帳號</h2>
-              <p class="muted small">一次建立家庭、家長帳號與第一個兒童帳號。</p>
+              <h2>建立家庭與第一個小孩帳號</h2>
+              <p class="muted small">媽媽先把小孩帳號建好，系統會給小孩 4 位 Child Code。</p>
             </div>
           </div>
           <div class="form-grid">
             <label class="form-row">家庭名稱<input name="familyName" required autocomplete="organization"></label>
             <label class="form-row">家長名稱<input name="managerName" required autocomplete="name"></label>
             <label class="form-row">家長密碼<input name="managerPassword" type="password" required autocomplete="new-password" minlength="6"></label>
-            <label class="form-row">兒童名稱<input name="childName" required autocomplete="off"></label>
+            <label class="form-row">小孩名稱<input name="childName" required autocomplete="off"></label>
             <label class="form-row">密碼找回問題<input name="recoveryQuestion" placeholder="例如：最喜歡的家庭活動"></label>
             <label class="form-row">密碼找回答案<input name="recoveryAnswer" autocomplete="off"></label>
           </div>
@@ -74,7 +74,7 @@
           <p class="muted small">Family Code: <span class="code" id="familyCodeText">-</span></p>
           <div class="tabs">
             <button class="btn tab-btn active" data-tab="dashboard">總覽</button>
-            <button class="btn tab-btn" data-tab="children">兒童</button>
+            <button class="btn tab-btn" data-tab="children">小孩帳號</button>
             <button class="btn tab-btn" data-tab="tasks">任務</button>
             <button class="btn tab-btn" data-tab="fines">扣點</button>
             <button class="btn tab-btn" data-tab="shop">商店</button>
@@ -99,10 +99,15 @@
 
           <div class="view" data-view="children">
             <div class="panel">
-              <div class="panel-head"><h2>兒童帳號</h2></div>
+              <div class="panel-head">
+                <div>
+                  <h2>小孩帳號</h2>
+                  <p class="muted small">媽媽在這裡替小孩建立帳號。建立後把 4 位 Child Code 給小孩，小孩輸入就能進入。</p>
+                </div>
+              </div>
               <form id="childForm" class="form-grid">
-                <label class="form-row">兒童名稱<input name="childName" required></label>
-                <div class="form-row"><label>&nbsp;</label><button class="btn good" type="submit">新增兒童</button></div>
+                <label class="form-row">小孩名稱<input name="childName" required autocomplete="off"></label>
+                <div class="form-row"><label>&nbsp;</label><button class="btn good" type="submit">建立小孩帳號</button></div>
               </form>
               <p class="status" id="childStatus"></p>
               <div class="list" id="childrenList"></div>
@@ -113,7 +118,7 @@
             <div class="panel">
               <div class="panel-head"><h2>任務</h2></div>
               <form id="taskForm" class="form-grid">
-                <label class="form-row">兒童<select name="childId" required class="childSelect"></select></label>
+                <label class="form-row">小孩<select name="childId" required class="childSelect"></select></label>
                 <label class="form-row">任務名稱<input name="taskName" required></label>
                 <label class="form-row">分類<select name="category"><option>家事</option><option>學習</option><option>生活</option><option>運動</option><option>其他</option></select></label>
                 <label class="form-row">點數<input name="points" type="number" min="1" value="1" required></label>
@@ -130,7 +135,7 @@
             <div class="panel">
               <div class="panel-head"><h2>扣點</h2></div>
               <form id="fineForm" class="form-grid">
-                <label class="form-row">兒童<select name="childId" required class="childSelect"></select></label>
+                <label class="form-row">小孩<select name="childId" required class="childSelect"></select></label>
                 <label class="form-row">扣點上限<input name="points" type="number" min="1" value="1" required></label>
                 <label class="form-row">原因<input name="reason" required></label>
                 <div class="form-row"><label>&nbsp;</label><button class="btn warn" type="submit">建立扣點</button></div>

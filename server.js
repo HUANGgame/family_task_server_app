@@ -56,7 +56,7 @@ function makeCode(length) {
 }
 
 const makeFamilyCode = () => makeCode(8);
-const makeChildCode = () => makeCode(6);
+const makeChildCode = () => makeCode(4);
 
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors());

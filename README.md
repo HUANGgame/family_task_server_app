@@ -8,7 +8,8 @@ Node.js + Express family task app with static HTML/CSS/JavaScript screens, Supab
 - Child role selection uses Bopomofo ruby annotations shown under the Chinese text.
 - Parent selection opens registration/login; child selection opens child login.
 - Signup creates a family, a manager account, and the first child account in one request.
-- Manager receives a generated `family_code`; the first child receives a generated `child_code`.
+- Manager receives a generated `family_code`; each child receives a generated 4-character `child_code`.
+- Parent creates child accounts for children, then gives each child the Family Code and 4-character Child Code.
 - Manager login uses `family_code + manager_password`.
 - Child login uses `family_code + child_code`.
 - Manager can create/delete children, assign tasks, require photos, add fines, add shop items, and add encouragement messages.
@@ -180,11 +181,11 @@ Errors use:
 1. Open `/`.
 2. Choose parent or child.
 3. If parent, create the family, manager account, and first child account from `/manager`.
-4. Copy the generated Family Code and Child Code.
+4. Copy the generated Family Code and 4-character Child Code.
 5. Continue into manager mode.
 6. Add more children, tasks, shop items, fines, and encouragement messages.
 7. If child, open `/child`.
-8. Log in with Family Code and Child Code.
+8. Log in with Family Code and the 4-character Child Code.
 9. Upload a photo for tasks that require one.
 10. Finish tasks and confirm points increase.
 11. Redeem an item and confirm points and stock decrease.

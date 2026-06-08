@@ -83,7 +83,7 @@ function bindVoiceButtons(root = document) {
 
 function readVisibleChildPage() {
   if (!childToken()) {
-    speakText("兒童登入。請輸入 Family Code 和 Child Code。");
+    speakText("兒童登入。請輸入 Family Code，和媽媽給你的四位 Child Code。");
     return;
   }
 
