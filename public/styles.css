@@ -376,6 +376,32 @@ label {
   font-weight: 700;
 }
 
+.field-label {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.child-names-row {
+  grid-column: 1 / -1;
+}
+
+.child-name-list {
+  display: grid;
+  gap: 8px;
+}
+
+.child-name-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.child-remove-btn {
+  min-width: 72px;
+}
+
 input,
 textarea,
 select,

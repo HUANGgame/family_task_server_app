@@ -32,7 +32,16 @@
             <label class="form-row">家庭名稱<input name="familyName" required autocomplete="organization"></label>
             <label class="form-row">家長名稱<input name="managerName" required autocomplete="name"></label>
             <label class="form-row">家長密碼<input name="managerPassword" type="password" required autocomplete="new-password" minlength="6"></label>
-            <label class="form-row">小孩名稱<input name="childName" required autocomplete="off"></label>
+            <div class="form-row child-names-row">
+              <span class="field-label">小孩名稱</span>
+              <div class="child-name-list" id="initialChildrenList">
+                <div class="child-name-entry">
+                  <input name="childNames" required autocomplete="off">
+                  <button class="btn secondary child-remove-btn" type="button" data-remove-initial-child aria-label="移除小孩">移除</button>
+                </div>
+              </div>
+              <button class="btn secondary" type="button" id="addInitialChildBtn">新增小孩</button>
+            </div>
           </div>
           <div class="button-row">
             <button class="btn good" type="submit">建立帳號</button>

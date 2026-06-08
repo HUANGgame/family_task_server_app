@@ -7,7 +7,7 @@ Node.js + Express family task app with static HTML/CSS/JavaScript screens, Supab
 - First screen asks the user to choose parent or child, with large icon buttons.
 - Child role selection uses Bopomofo ruby annotations shown under the Chinese text.
 - Parent selection opens registration/login; child selection opens child login.
-- Signup creates a family, a manager account, and the first child account in one request.
+- Signup creates a family, a manager account, and one or more child accounts in one request.
 - Manager receives a generated `family_code`; each child receives a generated 4-character `child_code`.
 - Parent creates child accounts for children, then gives each child the Family Code and 4-character Child Code.
 - Parent password reset uses the Family Name plus parent name. No email, SMS, or paid service is required.

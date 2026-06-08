@@ -184,16 +184,58 @@ bindTabs();
 setAuthMode("login");
 qsa("[data-auth]").forEach((button) => button.addEventListener("click", () => setAuthMode(button.dataset.auth)));
 
+function updateInitialChildRemoveButtons() {
+  const entries = qsa(".child-name-entry", qs("#initialChildrenList"));
+  entries.forEach((entry) => {
+    const button = qs("[data-remove-initial-child]", entry);
+    if (button) button.disabled = entries.length === 1;
+  });
+}
+
+function addInitialChildInput(value = "") {
+  const list = qs("#initialChildrenList");
+  const entry = document.createElement("div");
+  entry.className = "child-name-entry";
+  entry.innerHTML = `
+    <input name="childNames" required autocomplete="off" value="${escapeHtml(value)}">
+    <button class="btn secondary child-remove-btn" type="button" data-remove-initial-child aria-label="移除小孩">移除</button>
+  `;
+  list.appendChild(entry);
+  updateInitialChildRemoveButtons();
+  qs("input", entry).focus();
+}
+
+function createFamilyPayload(form) {
+  const data = formData(form);
+  const childNames = qsa('[name="childNames"]', form)
+    .map((input) => input.value.trim())
+    .filter(Boolean);
+  return { ...data, childNames };
+}
+
+qs("#addInitialChildBtn").addEventListener("click", () => addInitialChildInput());
+qs("#initialChildrenList").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-remove-initial-child]");
+  if (!button) return;
+  const entries = qsa(".child-name-entry", qs("#initialChildrenList"));
+  if (entries.length <= 1) return;
+  button.closest(".child-name-entry").remove();
+  updateInitialChildRemoveButtons();
+});
+updateInitialChildRemoveButtons();
+
 qs("#createFamilyForm").addEventListener("submit", async (event) => {
   event.preventDefault();
   const status = qs("#createStatus");
   setStatus(status, "建立中...");
   try {
-    const data = await api("/api/signup", { method: "POST", body: formData(event.target) });
+    const data = await api("/api/signup", { method: "POST", body: createFamilyPayload(event.target) });
     managerStore.token = data.token;
     managerState.familyCode = data.familyCode;
     sessionStorage.setItem("manager:familyCode", data.familyCode);
-    setStatus(status, `已建立。Family Code：${data.familyCode}，小孩 Child Code：${data.child.childCode}`);
+    const children = data.children || (data.child ? [data.child] : []);
+    const codes = children.map((child) => `${child.childName}：${child.childCode}`).join("、");
+    setStatus(status, `已建立。Family Code：${data.familyCode}，小孩 Child Code：${codes}`);
     await refreshManagerData();
   } catch (error) {
     setStatus(status, error.message, true);

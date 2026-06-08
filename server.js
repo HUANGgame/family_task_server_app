@@ -200,6 +200,11 @@ async function createChildAccount(familyId, childName) {
   return data;
 }
 
+function parseChildNames(body) {
+  const raw = Array.isArray(body.childNames) ? body.childNames : [body.childName];
+  return raw.map((name) => String(name || "").trim()).filter(Boolean);
+}
+
 async function getChildInFamily(familyId, childId) {
   const { data, error } = await supabase
     .from("children")
@@ -247,13 +252,17 @@ app.post("/api/families", asyncRoute(async (req, res) => {
 }));
 
 app.post("/api/signup", asyncRoute(async (req, res) => {
-  const missing = assertFields(req.body, ["familyName", "managerName", "managerPassword", "childName"]);
+  const childNames = parseChildNames(req.body);
+  const missing = assertFields(req.body, ["familyName", "managerName", "managerPassword"]);
   if (missing) return fail(res, 400, missing);
+  if (childNames.length === 0) return fail(res, 400, "childNames is required.");
 
   const family = await createFamilyAccount(req.body);
-  let child;
+  const children = [];
   try {
-    child = await createChildAccount(family.id, req.body.childName);
+    for (const childName of childNames) {
+      children.push(await createChildAccount(family.id, childName));
+    }
   } catch (error) {
     await supabase.from("families").delete().eq("id", family.id);
     throw error;
@@ -264,12 +273,18 @@ app.post("/api/signup", asyncRoute(async (req, res) => {
     token: managerToken,
     familyCode: family.family_code,
     managerName: family.manager_name,
-    child: {
+    child: children[0] ? {
+      childId: children[0].id,
+      childName: children[0].child_name,
+      childCode: children[0].child_code,
+      points: children[0].points
+    } : null,
+    children: children.map((child) => ({
       childId: child.id,
       childName: child.child_name,
       childCode: child.child_code,
       points: child.points
-    }
+    }))
   }, 201);
 }));
 
@@ -741,8 +756,10 @@ function localRegisterRoutes() {
   }));
 
   app.post("/api/signup", asyncRoute(async (req, res) => {
-    const missing = assertFields(req.body, ["familyName", "managerName", "managerPassword", "childName"]);
+    const childNames = parseChildNames(req.body);
+    const missing = assertFields(req.body, ["familyName", "managerName", "managerPassword"]);
     if (missing) return fail(res, 400, missing);
+    if (childNames.length === 0) return fail(res, 400, "childNames is required.");
 
     const data = readLocalData();
     const now = localNow();
@@ -755,29 +772,43 @@ function localRegisterRoutes() {
       created_at: now,
       updated_at: now
     };
-    const child = {
-      id: localId(),
-      family_id: family.id,
-      child_name: String(req.body.childName).trim(),
-      child_code: localUniqueCode(data, "children", "child_code", makeChildCode),
-      points: 0,
-      created_at: now,
-      updated_at: now
-    };
+    const childCodes = new Set(data.children.map((child) => child.child_code));
+    const children = childNames.map((childName) => {
+      let childCode;
+      do {
+        childCode = makeChildCode();
+      } while (childCodes.has(childCode));
+      childCodes.add(childCode);
+      return {
+        id: localId(),
+        family_id: family.id,
+        child_name: childName,
+        child_code: childCode,
+        points: 0,
+        created_at: now,
+        updated_at: now
+      };
+    });
     data.families.push(family);
-    data.children.push(child);
+    data.children.push(...children);
     writeLocalData(data);
 
     return ok(res, {
       token: signToken({ family_id: family.id, role: "manager" }),
       familyCode: family.family_code,
       managerName: family.manager_name,
-      child: {
+      child: children[0] ? {
+        childId: children[0].id,
+        childName: children[0].child_name,
+        childCode: children[0].child_code,
+        points: children[0].points
+      } : null,
+      children: children.map((child) => ({
         childId: child.id,
         childName: child.child_name,
         childCode: child.child_code,
         points: child.points
-      }
+      }))
     }, 201);
   }));
 
