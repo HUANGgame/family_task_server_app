@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Manager | Family Task Server App</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <a class="brand" href="/">
+          <span class="brand-mark">FT</span>
+          <span>Manager</span>
+        </a>
+        <div class="nav-actions">
+          <a class="btn secondary" href="/child">Child</a>
+          <button class="btn danger" id="logoutBtn">Logout</button>
+        </div>
+      </header>
+
+      <section class="auth-box panel" id="authPanel">
+        <div class="auth-tabs">
+          <button class="btn good" data-auth="create">建立家庭</button>
+          <button class="btn secondary" data-auth="login">家長登入</button>
+          <button class="btn secondary" data-auth="reset">忘記密碼</button>
+        </div>
+
+        <form id="createFamilyForm" class="auth-form">
+          <div class="form-grid">
+            <label class="form-row">家庭名稱<input name="familyName" autocomplete="organization"></label>
+            <label class="form-row">家長名稱<input name="managerName" required autocomplete="name"></label>
+            <label class="form-row">家長密碼<input name="managerPassword" type="password" required autocomplete="new-password"></label>
+            <label class="form-row">找回問題<input name="recoveryQuestion"></label>
+            <label class="form-row">找回答案<input name="recoveryAnswer"></label>
+          </div>
+          <div class="button-row">
+            <button class="btn good" type="submit">建立</button>
+            <span class="status" id="createStatus"></span>
+          </div>
+        </form>
+
+        <form id="loginForm" class="auth-form hidden">
+          <div class="form-grid">
+            <label class="form-row">Family Code<input name="familyCode" required autocomplete="off"></label>
+            <label class="form-row">密碼<input name="password" type="password" required autocomplete="current-password"></label>
+          </div>
+          <div class="button-row">
+            <button class="btn good" type="submit">登入</button>
+            <span class="status" id="loginStatus"></span>
+          </div>
+        </form>
+
+        <form id="resetForm" class="auth-form hidden">
+          <div class="form-grid">
+            <label class="form-row">Family Code<input name="familyCode" required autocomplete="off"></label>
+            <label class="form-row">家長名稱<input name="managerName" required></label>
+            <label class="form-row">找回答案<input name="recoveryAnswer" required></label>
+            <label class="form-row">新密碼<input name="newPassword" type="password" required></label>
+          </div>
+          <div class="button-row">
+            <button class="btn warn" type="submit">重設密碼</button>
+            <span class="status" id="resetStatus"></span>
+          </div>
+        </form>
+      </section>
+
+      <main class="app-grid hidden" id="appPanel">
+        <aside class="sidebar">
+          <h2>Family</h2>
+          <p class="muted small">Family Code: <span class="code" id="familyCodeText">-</span></p>
+          <div class="tabs">
+            <button class="btn tab-btn active" data-tab="dashboard">Dashboard</button>
+            <button class="btn tab-btn" data-tab="children">Children</button>
+            <button class="btn tab-btn" data-tab="tasks">Tasks</button>
+            <button class="btn tab-btn" data-tab="fines">Fines</button>
+            <button class="btn tab-btn" data-tab="shop">Shop</button>
+            <button class="btn tab-btn" data-tab="messages">Messages</button>
+            <button class="btn tab-btn" data-tab="ai">AI Demo</button>
+          </div>
+          <div class="danger-zone">
+            <button class="btn danger" id="clearSessionBtn">清除本機登入</button>
+          </div>
+        </aside>
+
+        <section class="main-stack">
+          <div class="view active" data-view="dashboard">
+            <div class="panel">
+              <div class="panel-head">
+                <h2>Dashboard</h2>
+                <button class="btn secondary" id="refreshDashboardBtn">Refresh</button>
+              </div>
+              <div class="stats" id="stats"></div>
+            </div>
+          </div>
+
+          <div class="view" data-view="children">
+            <div class="panel">
+              <div class="panel-head"><h2>Children</h2></div>
+              <form id="childForm" class="form-grid">
+                <label class="form-row">孩子名稱<input name="childName" required></label>
+                <div class="form-row"><label>&nbsp;</label><button class="btn good" type="submit">新增孩子</button></div>
+              </form>
+              <p class="status" id="childStatus"></p>
+              <div class="list" id="childrenList"></div>
+            </div>
+          </div>
+
+          <div class="view" data-view="tasks">
+            <div class="panel">
+              <div class="panel-head"><h2>Tasks</h2></div>
+              <form id="taskForm" class="form-grid">
+                <label class="form-row">孩子<select name="childId" required class="childSelect"></select></label>
+                <label class="form-row">任務名稱<input name="taskName" required></label>
+                <label class="form-row">分類<select name="category"><option>家事</option><option>學習</option><option>生活</option><option>運動</option><option>其他</option></select></label>
+                <label class="form-row">點數<input name="points" type="number" min="1" value="1" required></label>
+                <label class="form-row">說明<input name="taskNote"></label>
+                <label class="form-row">照片要求<select name="needPhoto"><option value="false">不需要</option><option value="true">需要</option></select></label>
+                <div class="form-row"><label>&nbsp;</label><button class="btn good" type="submit">新增任務</button></div>
+              </form>
+              <p class="status" id="taskStatus"></p>
+              <div class="list" id="tasksList"></div>
+            </div>
+          </div>
+
+          <div class="view" data-view="fines">
+            <div class="panel">
+              <div class="panel-head"><h2>Fines</h2></div>
+              <form id="fineForm" class="form-grid">
+                <label class="form-row">孩子<select name="childId" required class="childSelect"></select></label>
+                <label class="form-row">扣點上限<input name="points" type="number" min="1" value="1" required></label>
+                <label class="form-row">原因<input name="reason" required></label>
+                <div class="form-row"><label>&nbsp;</label><button class="btn warn" type="submit">建立扣點</button></div>
+              </form>
+              <p class="status" id="fineStatus"></p>
+              <div class="list" id="finesList"></div>
+            </div>
+          </div>
+
+          <div class="view" data-view="shop">
+            <div class="panel">
+              <div class="panel-head"><h2>Shop</h2></div>
+              <form id="shopForm" class="form-grid">
+                <label class="form-row">名稱<input name="name" required></label>
+                <label class="form-row">說明<input name="description"></label>
+                <label class="form-row">點數成本<input name="cost" type="number" min="1" value="5" required></label>
+                <label class="form-row">庫存<input name="stock" type="number" min="0" value="1"></label>
+                <div class="form-row"><label>&nbsp;</label><button class="btn good" type="submit">新增商品</button></div>
+              </form>
+              <p class="status" id="shopStatus"></p>
+              <div class="list" id="shopList"></div>
+            </div>
+          </div>
+
+          <div class="view" data-view="messages">
+            <div class="panel">
+              <div class="panel-head"><h2>Encouragement</h2></div>
+              <form id="messageForm" class="form-grid">
+                <label class="form-row">訊息<input name="message" required></label>
+                <div class="form-row"><label>&nbsp;</label><button class="btn good" type="submit">新增鼓勵語</button></div>
+              </form>
+              <p class="status" id="messageStatus"></p>
+              <div class="list" id="messagesList"></div>
+            </div>
+          </div>
+
+          <div class="view" data-view="ai">
+            <div class="panel">
+              <div class="panel-head"><h2>AI 任務建議 Demo</h2></div>
+              <form id="aiForm" class="form-grid">
+                <label class="form-row">主題<input name="prompt" placeholder="例如：整理房間、準備考試"></label>
+                <div class="form-row"><label>&nbsp;</label><button class="btn warn" type="submit">產生建議</button></div>
+              </form>
+              <p class="status" id="aiStatus"></p>
+              <div class="list" id="aiList"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/app.js"></script>
+    <script src="/manager.js"></script>
+  </body>
+</html>
