@@ -3,57 +3,49 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>建立帳號 | Family Task Server App</title>
+    <title>選擇身分 | Family Task Server App</title>
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
-    <main class="signup-screen">
-      <section class="signup-card">
-        <div class="panel-head">
-          <div>
-            <h1>建立家庭帳號</h1>
-            <p class="muted">一次建立家長帳號與第一個兒童帳號。</p>
-          </div>
-        </div>
+    <main class="role-screen">
+      <section class="role-card" aria-labelledby="roleTitle">
+        <h1 id="roleTitle">你是家長還是兒童？</h1>
 
-        <form id="signupForm" class="signup-form">
-          <div class="form-grid">
-            <label class="form-row">家庭名稱<input name="familyName" required autocomplete="organization"></label>
-            <label class="form-row">家長名稱<input name="managerName" required autocomplete="name"></label>
-            <label class="form-row">家長密碼<input name="managerPassword" type="password" required autocomplete="new-password" minlength="6"></label>
-            <label class="form-row">兒童名稱<input name="childName" required autocomplete="off"></label>
-            <label class="form-row">密碼找回問題<input name="recoveryQuestion" placeholder="例如：最喜歡的家庭活動"></label>
-            <label class="form-row">密碼找回答案<input name="recoveryAnswer" autocomplete="off"></label>
-          </div>
+        <div class="role-grid">
+          <a class="role-option parent-option" href="/manager" aria-label="我是家長">
+            <span class="role-icon" aria-hidden="true">
+              <svg viewBox="0 0 64 64" focusable="false">
+                <circle cx="32" cy="20" r="10"></circle>
+                <path d="M15 56c2-14 11-22 17-22s15 8 17 22"></path>
+                <path d="M20 42h24"></path>
+                <path d="M44 18h10v16"></path>
+                <path d="M54 18l-8-8"></path>
+              </svg>
+            </span>
+            <span class="role-title">我是家長</span>
+          </a>
 
-          <div class="button-row">
-            <button class="btn good" type="submit">建立帳號</button>
-            <span class="status" id="signupStatus"></span>
-          </div>
-        </form>
-
-        <div class="signup-result hidden" id="signupResult">
-          <h2>帳號已建立</h2>
-          <div class="result-grid">
-            <div class="stat">
-              <span class="muted small">Family Code</span>
-              <strong class="code" id="resultFamilyCode">-</strong>
-            </div>
-            <div class="stat">
-              <span class="muted small">兒童 Child Code</span>
-              <strong class="code" id="resultChildCode">-</strong>
-            </div>
-          </div>
-          <p class="muted small">家長使用 Family Code + 家長密碼登入；兒童使用 Family Code + Child Code 登入。</p>
-          <div class="button-row">
-            <a class="btn good" href="/manager">進入家長管理</a>
-            <a class="btn secondary" href="/child">前往兒童登入</a>
-          </div>
+          <a class="role-option child-option child-choice" href="/child" aria-label="我是兒童">
+            <span class="role-icon" aria-hidden="true">
+              <svg viewBox="0 0 64 64" focusable="false">
+                <circle cx="32" cy="19" r="9"></circle>
+                <path d="M18 55c2-13 10-20 14-20s12 7 14 20"></path>
+                <path d="M15 27c4 5 8 7 13 7"></path>
+                <path d="M49 27c-4 5-8 7-13 7"></path>
+                <path d="M24 17h.1"></path>
+                <path d="M40 17h.1"></path>
+                <path d="M27 24c3 2 7 2 10 0"></path>
+              </svg>
+            </span>
+            <span class="role-title child-role-title">
+              <ruby>我<rt>ㄨㄛˇ</rt></ruby>
+              <ruby>是<rt>ㄕˋ</rt></ruby>
+              <ruby>兒<rt>ㄦˊ</rt></ruby>
+              <ruby>童<rt>ㄊㄨㄥˊ</rt></ruby>
+            </span>
+          </a>
         </div>
       </section>
     </main>
-
-    <script src="/app.js"></script>
-    <script src="/signup.js"></script>
   </body>
 </html>
