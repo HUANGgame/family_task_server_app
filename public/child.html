@@ -11,18 +11,32 @@
       <header class="topbar">
         <a class="brand" href="/">
           <span class="brand-mark">FT</span>
-          <span>兒童版</span>
+          <span class="login-zhuyin">
+            <ruby>兒<rt>ㄦˊ</rt></ruby><ruby>童<rt>ㄊㄨㄥˊ</rt></ruby><ruby>版<rt>ㄅㄢˇ</rt></ruby>
+          </span>
         </a>
       </header>
 
       <section class="auth-box panel child-login-panel" id="childAuthPanel">
         <div class="panel-head">
-          <h2>兒童登入</h2>
+          <h2 class="login-zhuyin">
+            <ruby>兒<rt>ㄦˊ</rt></ruby><ruby>童<rt>ㄊㄨㄥˊ</rt></ruby><ruby>登<rt>ㄉㄥ</rt></ruby><ruby>入<rt>ㄖㄨˋ</rt></ruby>
+          </h2>
         </div>
         <form id="childLoginForm" class="form-grid">
-          <label class="form-row">家庭代碼<input name="familyCode" required autocomplete="off"></label>
-          <label class="form-row">小孩代碼<input name="childCode" required autocomplete="off" maxlength="4" minlength="4" inputmode="text"></label>
-          <div class="form-row"><label>&nbsp;</label><button class="btn good" type="submit">登入</button></div>
+          <label class="form-row">
+            <span class="login-zhuyin">
+              <ruby>家<rt>ㄐㄧㄚ</rt></ruby><ruby>庭<rt>ㄊㄧㄥˊ</rt></ruby><ruby>代<rt>ㄉㄞˋ</rt></ruby><ruby>碼<rt>ㄇㄚˇ</rt></ruby>
+            </span>
+            <input name="familyCode" required autocomplete="off">
+          </label>
+          <label class="form-row">
+            <span class="login-zhuyin">
+              <ruby>小<rt>ㄒㄧㄠˇ</rt></ruby><ruby>孩<rt>ㄏㄞˊ</rt></ruby><ruby>代<rt>ㄉㄞˋ</rt></ruby><ruby>碼<rt>ㄇㄚˇ</rt></ruby>
+            </span>
+            <input name="childCode" required autocomplete="off" maxlength="4" minlength="4" inputmode="text">
+          </label>
+          <div class="form-row"><label>&nbsp;</label><button class="btn good" type="submit"><span class="login-zhuyin"><ruby>登<rt>ㄉㄥ</rt></ruby><ruby>入<rt>ㄖㄨˋ</rt></ruby></span></button></div>
         </form>
         <p class="status" id="childLoginStatus"></p>
       </section>

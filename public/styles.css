@@ -616,6 +616,30 @@ ruby.zh-char {
   font-size: 16px;
 }
 
+.login-zhuyin {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.08em;
+  line-height: 1.9;
+}
+
+.login-zhuyin ruby {
+  ruby-position: under;
+  -webkit-ruby-position: after;
+  text-align: center;
+}
+
+.login-zhuyin rt {
+  color: var(--muted);
+  font-size: 0.42em;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.child-login-panel .btn .login-zhuyin {
+  line-height: 1.55;
+}
+
 .child-account-card {
   border-color: rgba(107, 170, 117, 0.45);
 }
