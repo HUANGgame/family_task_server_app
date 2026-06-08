@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const path = require("path");
+const fs = require("fs");
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -34,6 +35,13 @@ for (const [name, value] of Object.entries(requiredEnv)) {
 const supabase = createClient(SUPABASE_URL || "https://example.supabase.co", SUPABASE_SERVICE_ROLE_KEY || "missing", {
   auth: { persistSession: false }
 });
+const hasSupabaseConfig = Boolean(
+  SUPABASE_URL &&
+    SUPABASE_SERVICE_ROLE_KEY &&
+    !SUPABASE_URL.includes("example.supabase.co") &&
+    SUPABASE_SERVICE_ROLE_KEY !== "placeholder" &&
+    SUPABASE_SERVICE_ROLE_KEY !== "missing"
+);
 
 const app = express();
 const upload = multer({
@@ -227,6 +235,11 @@ app.get("/manager", (req, res) => res.sendFile(path.join(__dirname, "public", "m
 app.get("/child", (req, res) => res.sendFile(path.join(__dirname, "public", "child.html")));
 
 app.get("/api/health", (req, res) => ok(res, { status: "running", env: NODE_ENV || "development" }));
+
+if (!hasSupabaseConfig) {
+  console.warn("Supabase is not configured. Using local data mode for localhost testing.");
+  localRegisterRoutes();
+}
 
 app.post("/api/families", asyncRoute(async (req, res) => {
   const family = await createFamilyAccount(req.body);
@@ -655,6 +668,442 @@ function aiSuggestion(input) {
     { taskName: `${text} - show proof`, category: "家事", points: 3, needPhoto: true },
     { taskName: `${text} - finish and reflect`, category: "其他", points: 1, needPhoto: false }
   ];
+}
+
+const localDataPath = path.join(__dirname, ".local-data.json");
+
+function emptyLocalData() {
+  return {
+    families: [],
+    children: [],
+    tasks: [],
+    fines: [],
+    shop_items: [],
+    redemptions: [],
+    encouragement_messages: []
+  };
+}
+
+function readLocalData() {
+  try {
+    if (!fs.existsSync(localDataPath)) return emptyLocalData();
+    return { ...emptyLocalData(), ...JSON.parse(fs.readFileSync(localDataPath, "utf8")) };
+  } catch (error) {
+    console.error(error);
+    return emptyLocalData();
+  }
+}
+
+function writeLocalData(data) {
+  fs.writeFileSync(localDataPath, JSON.stringify(data, null, 2));
+}
+
+function localId() {
+  return crypto.randomUUID();
+}
+
+function localNow() {
+  return new Date().toISOString();
+}
+
+function localUniqueCode(data, collectionName, columnName, maker) {
+  let code;
+  do {
+    code = maker();
+  } while (data[collectionName].some((item) => item[columnName] === code));
+  return code;
+}
+
+function localChildInFamily(data, familyId, childId) {
+  return data.children.find((child) => child.family_id === familyId && child.id === childId);
+}
+
+function localRegisterRoutes() {
+  app.post("/api/families", asyncRoute(async (req, res) => {
+    const missing = assertFields(req.body, ["managerName", "managerPassword"]);
+    if (missing) return fail(res, 400, missing);
+
+    const data = readLocalData();
+    const now = localNow();
+    const managerHash = await bcrypt.hash(req.body.managerPassword, 12);
+    const family = {
+      id: localId(),
+      family_code: localUniqueCode(data, "families", "family_code", makeFamilyCode),
+      family_name: String(req.body.familyName || "").trim() || null,
+      manager_name: String(req.body.managerName).trim(),
+      manager_password_hash: managerHash,
+      created_at: now,
+      updated_at: now
+    };
+    data.families.push(family);
+    writeLocalData(data);
+    return ok(res, { familyCode: family.family_code, managerName: family.manager_name }, 201);
+  }));
+
+  app.post("/api/signup", asyncRoute(async (req, res) => {
+    const missing = assertFields(req.body, ["familyName", "managerName", "managerPassword", "childName"]);
+    if (missing) return fail(res, 400, missing);
+
+    const data = readLocalData();
+    const now = localNow();
+    const family = {
+      id: localId(),
+      family_code: localUniqueCode(data, "families", "family_code", makeFamilyCode),
+      family_name: String(req.body.familyName).trim(),
+      manager_name: String(req.body.managerName).trim(),
+      manager_password_hash: await bcrypt.hash(req.body.managerPassword, 12),
+      created_at: now,
+      updated_at: now
+    };
+    const child = {
+      id: localId(),
+      family_id: family.id,
+      child_name: String(req.body.childName).trim(),
+      child_code: localUniqueCode(data, "children", "child_code", makeChildCode),
+      points: 0,
+      created_at: now,
+      updated_at: now
+    };
+    data.families.push(family);
+    data.children.push(child);
+    writeLocalData(data);
+
+    return ok(res, {
+      token: signToken({ family_id: family.id, role: "manager" }),
+      familyCode: family.family_code,
+      managerName: family.manager_name,
+      child: {
+        childId: child.id,
+        childName: child.child_name,
+        childCode: child.child_code,
+        points: child.points
+      }
+    }, 201);
+  }));
+
+  app.post("/api/manager/login", asyncRoute(async (req, res) => {
+    const missing = assertFields(req.body, ["familyCode", "password"]);
+    if (missing) return fail(res, 400, missing);
+
+    const data = readLocalData();
+    const family = data.families.find((item) => item.family_code === normalizeCode(req.body.familyCode));
+    if (!family) return fail(res, 401, "Family code or password is incorrect.");
+    const valid = await bcrypt.compare(req.body.password, family.manager_password_hash);
+    if (!valid) return fail(res, 401, "Family code or password is incorrect.");
+    return ok(res, {
+      token: signToken({ family_id: family.id, role: "manager" }),
+      familyCode: family.family_code,
+      managerName: family.manager_name
+    });
+  }));
+
+  app.post("/api/manager/reset-password", asyncRoute(async (req, res) => {
+    const missing = assertFields(req.body, ["familyName", "managerName", "newPassword"]);
+    if (missing) return fail(res, 400, missing);
+
+    const data = readLocalData();
+    const matches = data.families.filter((family) =>
+      family.family_name === String(req.body.familyName || "").trim() &&
+      family.manager_name === String(req.body.managerName || "").trim()
+    );
+    if (matches.length !== 1) return fail(res, 401, "Password reset information is incorrect.");
+    matches[0].manager_password_hash = await bcrypt.hash(req.body.newPassword, 12);
+    matches[0].updated_at = localNow();
+    writeLocalData(data);
+    return ok(res, { message: "Password updated." });
+  }));
+
+  app.get("/api/manager/dashboard", requireManager, (req, res) => {
+    const data = readLocalData();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const familyTasks = data.tasks.filter((task) => task.family_id === req.user.family_id);
+    return ok(res, {
+      childrenCount: data.children.filter((child) => child.family_id === req.user.family_id).length,
+      todayTasksCount: familyTasks.filter((task) => new Date(task.created_at) >= today).length,
+      doneTasksCount: familyTasks.filter((task) => task.done).length,
+      notDoneTasksCount: familyTasks.filter((task) => !task.done).length,
+      photoSubmittedCount: familyTasks.filter((task) => Boolean(task.photo_url)).length,
+      todayRedemptionsCount: data.redemptions.filter((item) => item.family_id === req.user.family_id && new Date(item.created_at) >= today).length,
+      todayFinesCount: data.fines.filter((fine) => fine.family_id === req.user.family_id && new Date(fine.created_at) >= today).length
+    });
+  });
+
+  app.post("/api/manager/children", requireManager, (req, res) => {
+    const missing = assertFields(req.body, ["childName"]);
+    if (missing) return fail(res, 400, missing);
+    const data = readLocalData();
+    const now = localNow();
+    const child = {
+      id: localId(),
+      family_id: req.user.family_id,
+      child_name: String(req.body.childName).trim(),
+      child_code: localUniqueCode(data, "children", "child_code", makeChildCode),
+      points: 0,
+      created_at: now,
+      updated_at: now
+    };
+    data.children.push(child);
+    writeLocalData(data);
+    return ok(res, { childId: child.id, childName: child.child_name, childCode: child.child_code, points: child.points }, 201);
+  });
+
+  app.get("/api/manager/children", requireManager, (req, res) => {
+    const data = readLocalData();
+    return ok(res, {
+      children: data.children
+        .filter((child) => child.family_id === req.user.family_id)
+        .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+    });
+  });
+
+  app.delete("/api/manager/children/:childId", requireManager, (req, res) => {
+    const data = readLocalData();
+    data.children = data.children.filter((child) => !(child.family_id === req.user.family_id && child.id === req.params.childId));
+    data.tasks = data.tasks.filter((task) => !(task.family_id === req.user.family_id && task.child_id === req.params.childId));
+    data.fines = data.fines.filter((fine) => !(fine.family_id === req.user.family_id && fine.child_id === req.params.childId));
+    writeLocalData(data);
+    return ok(res, { deleted: true });
+  });
+
+  app.post("/api/manager/children/:childId/tasks", requireManager, (req, res) => {
+    const data = readLocalData();
+    if (!localChildInFamily(data, req.user.family_id, req.params.childId)) return fail(res, 404, "Child not found.");
+    const missing = assertFields(req.body, ["taskName"]);
+    if (missing) return fail(res, 400, missing);
+    const now = localNow();
+    const task = {
+      id: localId(),
+      family_id: req.user.family_id,
+      child_id: req.params.childId,
+      task_name: String(req.body.taskName).trim(),
+      task_note: String(req.body.taskNote || "").trim() || null,
+      category: String(req.body.category || "家事").trim(),
+      need_photo: Boolean(req.body.needPhoto),
+      points: Math.max(1, Number.parseInt(req.body.points, 10) || 1),
+      done: false,
+      rewarded: false,
+      photo_url: null,
+      created_at: now,
+      updated_at: now
+    };
+    data.tasks.push(task);
+    writeLocalData(data);
+    return ok(res, { task }, 201);
+  });
+
+  app.get("/api/manager/children/:childId/tasks", requireManager, (req, res) => {
+    const data = readLocalData();
+    if (!localChildInFamily(data, req.user.family_id, req.params.childId)) return fail(res, 404, "Child not found.");
+    return ok(res, {
+      tasks: data.tasks
+        .filter((task) => task.family_id === req.user.family_id && task.child_id === req.params.childId)
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    });
+  });
+
+  app.delete("/api/manager/children/:childId/tasks/:taskId", requireManager, (req, res) => {
+    const data = readLocalData();
+    data.tasks = data.tasks.filter((task) =>
+      !(task.family_id === req.user.family_id && task.child_id === req.params.childId && task.id === req.params.taskId)
+    );
+    writeLocalData(data);
+    return ok(res, { deleted: true });
+  });
+
+  app.post("/api/child/login", (req, res) => {
+    const missing = assertFields(req.body, ["familyCode", "childCode"]);
+    if (missing) return fail(res, 400, missing);
+    const data = readLocalData();
+    const family = data.families.find((item) => item.family_code === normalizeCode(req.body.familyCode));
+    if (!family) return fail(res, 401, "Family code or child code is incorrect.");
+    const child = data.children.find((item) => item.family_id === family.id && item.child_code === normalizeCode(req.body.childCode));
+    if (!child) return fail(res, 401, "Family code or child code is incorrect.");
+    return ok(res, {
+      token: signToken({ family_id: family.id, child_id: child.id, role: "child" }),
+      childName: child.child_name,
+      points: child.points
+    });
+  });
+
+  app.get("/api/child/me", requireChild, (req, res) => {
+    const child = localChildInFamily(readLocalData(), req.user.family_id, req.user.child_id);
+    if (!child) return fail(res, 404, "Child not found.");
+    return ok(res, { childName: child.child_name, childCode: child.child_code, points: child.points });
+  });
+
+  app.get("/api/child/tasks", requireChild, (req, res) => {
+    const data = readLocalData();
+    return ok(res, {
+      tasks: data.tasks
+        .filter((task) => task.family_id === req.user.family_id && task.child_id === req.user.child_id)
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    });
+  });
+
+  app.post("/api/child/tasks/:taskId/photo", requireChild, upload.single("photo"), (req, res) => {
+    if (!req.file) return fail(res, 400, "Photo is required.");
+    const data = readLocalData();
+    const task = data.tasks.find((item) => item.family_id === req.user.family_id && item.child_id === req.user.child_id && item.id === req.params.taskId);
+    if (!task) return fail(res, 404, "Task not found.");
+    task.photo_url = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+    task.updated_at = localNow();
+    writeLocalData(data);
+    return ok(res, { photoUrl: task.photo_url });
+  });
+
+  app.put("/api/child/tasks/:taskId/finish", requireChild, (req, res) => {
+    const data = readLocalData();
+    const task = data.tasks.find((item) => item.family_id === req.user.family_id && item.child_id === req.user.child_id && item.id === req.params.taskId);
+    if (!task) return fail(res, 404, "Task not found.");
+    if (task.done) return ok(res, { task, earnedPoints: 0 });
+    if (task.need_photo && !task.photo_url) return fail(res, 400, "This task needs a photo before it can be finished.");
+    const child = localChildInFamily(data, req.user.family_id, req.user.child_id);
+    const earnedPoints = task.rewarded ? 0 : Number(task.points || 0);
+    if (child && earnedPoints > 0) child.points = Number(child.points || 0) + earnedPoints;
+    task.done = true;
+    task.rewarded = true;
+    task.completed_at = localNow();
+    task.updated_at = localNow();
+    writeLocalData(data);
+    return ok(res, { task, earnedPoints });
+  });
+
+  app.post("/api/manager/children/:childId/fines", requireManager, (req, res) => {
+    const data = readLocalData();
+    const child = localChildInFamily(data, req.user.family_id, req.params.childId);
+    if (!child) return fail(res, 404, "Child not found.");
+    const reason = String(req.body.reason || "").trim();
+    if (!reason) return fail(res, 400, "reason is required.");
+    const points = Math.max(1, Number.parseInt(req.body.points, 10) || 1);
+    const deducted = Math.min(points, Number(child.points || 0));
+    child.points = Number(child.points || 0) - deducted;
+    const now = localNow();
+    const fine = { id: localId(), family_id: req.user.family_id, child_id: req.params.childId, points, deducted, reason, created_at: now, updated_at: now };
+    data.fines.push(fine);
+    writeLocalData(data);
+    return ok(res, { fine }, 201);
+  });
+
+  app.get("/api/manager/children/:childId/fines", requireManager, (req, res) => {
+    const data = readLocalData();
+    return ok(res, {
+      fines: data.fines
+        .filter((fine) => fine.family_id === req.user.family_id && fine.child_id === req.params.childId)
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    });
+  });
+
+  app.get("/api/child/fines", requireChild, (req, res) => {
+    const data = readLocalData();
+    return ok(res, {
+      fines: data.fines
+        .filter((fine) => fine.family_id === req.user.family_id && fine.child_id === req.user.child_id)
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    });
+  });
+
+  app.post("/api/manager/shop", requireManager, (req, res) => {
+    const missing = assertFields(req.body, ["name", "cost"]);
+    if (missing) return fail(res, 400, missing);
+    const data = readLocalData();
+    const now = localNow();
+    const item = {
+      id: localId(),
+      family_id: req.user.family_id,
+      name: String(req.body.name).trim(),
+      description: String(req.body.description || "").trim() || null,
+      cost: Math.max(1, Number.parseInt(req.body.cost, 10) || 1),
+      stock: Math.max(0, Number.parseInt(req.body.stock, 10) || 1),
+      active: req.body.active !== false,
+      created_at: now,
+      updated_at: now
+    };
+    data.shop_items.push(item);
+    writeLocalData(data);
+    return ok(res, { item }, 201);
+  });
+
+  app.get("/api/manager/shop", requireManager, (req, res) => {
+    const data = readLocalData();
+    return ok(res, {
+      items: data.shop_items
+        .filter((item) => item.family_id === req.user.family_id)
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    });
+  });
+
+  app.delete("/api/manager/shop/:itemId", requireManager, (req, res) => {
+    const data = readLocalData();
+    const item = data.shop_items.find((entry) => entry.family_id === req.user.family_id && entry.id === req.params.itemId);
+    if (item) item.active = false;
+    writeLocalData(data);
+    return ok(res, { deleted: true });
+  });
+
+  app.get("/api/child/shop", requireChild, (req, res) => {
+    const data = readLocalData();
+    return ok(res, {
+      items: data.shop_items
+        .filter((item) => item.family_id === req.user.family_id && item.active && Number(item.stock) > 0)
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    });
+  });
+
+  app.post("/api/child/shop/:itemId/redeem", requireChild, (req, res) => {
+    const data = readLocalData();
+    const item = data.shop_items.find((entry) => entry.family_id === req.user.family_id && entry.id === req.params.itemId && entry.active);
+    if (!item || Number(item.stock) <= 0) return fail(res, 404, "Shop item is not available.");
+    const child = localChildInFamily(data, req.user.family_id, req.user.child_id);
+    if (!child || Number(child.points || 0) < Number(item.cost)) return fail(res, 400, "Not enough points.");
+    child.points = Number(child.points || 0) - Number(item.cost);
+    item.stock = Number(item.stock) - 1;
+    const redemption = {
+      id: localId(),
+      family_id: req.user.family_id,
+      child_id: req.user.child_id,
+      shop_item_id: item.id,
+      item_name: item.name,
+      cost: item.cost,
+      created_at: localNow()
+    };
+    data.redemptions.push(redemption);
+    writeLocalData(data);
+    return ok(res, { redemption }, 201);
+  });
+
+  app.post("/api/manager/encouragements", requireManager, (req, res) => {
+    const missing = assertFields(req.body, ["message"]);
+    if (missing) return fail(res, 400, missing);
+    const data = readLocalData();
+    const now = localNow();
+    const message = {
+      id: localId(),
+      family_id: req.user.family_id,
+      message: String(req.body.message).trim(),
+      active: req.body.active !== false,
+      created_at: now,
+      updated_at: now
+    };
+    data.encouragement_messages.push(message);
+    writeLocalData(data);
+    return ok(res, { message }, 201);
+  });
+
+  app.get("/api/manager/encouragements", requireManager, (req, res) => {
+    const data = readLocalData();
+    return ok(res, {
+      messages: data.encouragement_messages
+        .filter((message) => message.family_id === req.user.family_id)
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    });
+  });
+
+  app.get("/api/child/encouragement", requireChild, (req, res) => {
+    const messages = readLocalData().encouragement_messages.filter((message) => message.family_id === req.user.family_id && message.active);
+    if (!messages.length) return ok(res, { message: "今天也很棒，完成一件小事就有進步。" });
+    return ok(res, { message: messages[Math.floor(Math.random() * messages.length)].message });
+  });
 }
 
 app.post("/api/manager/ai-suggestion", requireManager, (req, res) => {

@@ -59,6 +59,8 @@ NODE_ENV=development
 PORT=3000
 ```
 
+If `.env` is missing on localhost, the app uses `.local-data.json` so account creation and testing still work without Supabase. Render should still use the Supabase environment variables above.
+
 3. Run the server:
 
 ```bash
