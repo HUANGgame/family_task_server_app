@@ -143,8 +143,6 @@ async function createFamilyAccount(body) {
 
   const familyCode = await uniqueCode("families", "family_code", makeFamilyCode);
   const managerHash = await bcrypt.hash(body.managerPassword, 12);
-  const answer = String(body.recoveryAnswer || "").trim();
-  const recoveryAnswerHash = answer ? await bcrypt.hash(answer.toLowerCase(), 12) : null;
 
   const { data, error } = await supabase
     .from("families")
@@ -152,9 +150,7 @@ async function createFamilyAccount(body) {
       family_code: familyCode,
       family_name: String(body.familyName || "").trim() || null,
       manager_name: String(body.managerName).trim(),
-      manager_password_hash: managerHash,
-      recovery_question: String(body.recoveryQuestion || "").trim() || null,
-      recovery_answer_hash: recoveryAnswerHash
+      manager_password_hash: managerHash
     })
     .select("id, family_code, manager_name")
     .single();
@@ -227,7 +223,7 @@ app.post("/api/families", asyncRoute(async (req, res) => {
 }));
 
 app.post("/api/signup", asyncRoute(async (req, res) => {
-  const missing = assertFields(req.body, ["familyName", "managerName", "managerPassword", "childName", "recoveryAnswer"]);
+  const missing = assertFields(req.body, ["familyName", "managerName", "managerPassword", "childName"]);
   if (missing) return fail(res, 400, missing);
 
   const family = await createFamilyAccount(req.body);
@@ -268,16 +264,13 @@ app.post("/api/manager/login", asyncRoute(async (req, res) => {
 }));
 
 app.post("/api/manager/reset-password", asyncRoute(async (req, res) => {
-  const missing = assertFields(req.body, ["familyCode", "recoveryAnswer", "newPassword"]);
+  const missing = assertFields(req.body, ["familyCode", "managerName", "newPassword"]);
   if (missing) return fail(res, 400, missing);
 
   const family = await getFamilyByCode(req.body.familyCode);
-  if (!family || !family.recovery_answer_hash) {
+  if (!family || family.manager_name !== String(req.body.managerName).trim()) {
     return fail(res, 401, "Password reset information is incorrect.");
   }
-
-  const valid = await bcrypt.compare(String(req.body.recoveryAnswer).trim().toLowerCase(), family.recovery_answer_hash);
-  if (!valid) return fail(res, 401, "Password reset information is incorrect.");
 
   const managerPasswordHash = await bcrypt.hash(req.body.newPassword, 12);
   const { error } = await supabase

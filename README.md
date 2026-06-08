@@ -10,7 +10,7 @@ Node.js + Express family task app with static HTML/CSS/JavaScript screens, Supab
 - Signup creates a family, a manager account, and the first child account in one request.
 - Manager receives a generated `family_code`; each child receives a generated 4-character `child_code`.
 - Parent creates child accounts for children, then gives each child the Family Code and 4-character Child Code.
-- Parent password reset uses a free password recovery answer. No email, SMS, or paid service is required.
+- Parent password reset uses the Family Code plus parent name. No email, SMS, or paid service is required.
 - Manager login uses `family_code + manager_password`.
 - Child login uses `family_code + child_code`.
 - Manager can create/delete children, assign tasks, require photos, add fines, add shop items, and add encouragement messages.
@@ -170,7 +170,7 @@ Errors use:
 ## Security Notes
 
 - `SUPABASE_SERVICE_ROLE_KEY` is used only in `server.js`.
-- Passwords and recovery answers are stored as bcrypt hashes.
+- Parent passwords are stored as bcrypt hashes.
 - Manager and child sessions are JWTs stored in browser `sessionStorage`.
 - Child APIs are scoped by both `family_id` and `child_id`.
 - Manager APIs are scoped by `family_id`.
