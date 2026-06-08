@@ -216,6 +216,8 @@ qs("#loginForm").addEventListener("submit", async (event) => {
   }
 });
 
+qs("#forgotPasswordBtn").addEventListener("click", () => setAuthMode("reset"));
+
 qs("#resetForm").addEventListener("submit", async (event) => {
   event.preventDefault();
   const status = qs("#resetStatus");
