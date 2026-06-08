@@ -133,6 +133,17 @@ async function getFamilyByCode(familyCode) {
   return data;
 }
 
+async function getFamilyByNameAndManager(familyName, managerName) {
+  const { data, error } = await supabase
+    .from("families")
+    .select("*")
+    .eq("family_name", String(familyName || "").trim())
+    .eq("manager_name", String(managerName || "").trim())
+    .limit(2);
+  if (error) throw error;
+  return data && data.length === 1 ? data[0] : null;
+}
+
 async function createFamilyAccount(body) {
   const missing = assertFields(body, ["managerName", "managerPassword"]);
   if (missing) {
@@ -264,11 +275,11 @@ app.post("/api/manager/login", asyncRoute(async (req, res) => {
 }));
 
 app.post("/api/manager/reset-password", asyncRoute(async (req, res) => {
-  const missing = assertFields(req.body, ["familyCode", "managerName", "newPassword"]);
+  const missing = assertFields(req.body, ["familyName", "managerName", "newPassword"]);
   if (missing) return fail(res, 400, missing);
 
-  const family = await getFamilyByCode(req.body.familyCode);
-  if (!family || family.manager_name !== String(req.body.managerName).trim()) {
+  const family = await getFamilyByNameAndManager(req.body.familyName, req.body.managerName);
+  if (!family) {
     return fail(res, 401, "Password reset information is incorrect.");
   }
 

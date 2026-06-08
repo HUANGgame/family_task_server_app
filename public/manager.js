@@ -225,7 +225,6 @@ qs("#resetForm").addEventListener("submit", async (event) => {
   try {
     await api("/api/manager/reset-password", { method: "POST", body: formData(event.target) });
     setStatus(status, "密碼已更新，請回到家長登入。");
-    qs("#loginForm [name=familyCode]").value = qs("#resetForm [name=familyCode]").value;
     setAuthMode("login");
   } catch (error) {
     setStatus(status, error.message, true);
