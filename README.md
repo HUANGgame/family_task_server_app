@@ -133,6 +133,7 @@ Errors use:
 - `POST /api/signup`
 - `POST /api/families`
 - `POST /api/manager/login`
+- `POST /api/manager/reset-password`
 - `POST /api/child/login`
 - `GET /api/health`
 
