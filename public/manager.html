@@ -19,7 +19,6 @@
         <div class="auth-tabs">
           <button class="btn good" data-auth="create">建立家庭</button>
           <button class="btn secondary" data-auth="login">家長登入</button>
-          <button class="btn secondary" data-auth="reset">忘記密碼</button>
         </div>
 
         <form id="createFamilyForm" class="auth-form">
@@ -34,8 +33,6 @@
             <label class="form-row">家長名稱<input name="managerName" required autocomplete="name"></label>
             <label class="form-row">家長密碼<input name="managerPassword" type="password" required autocomplete="new-password" minlength="6"></label>
             <label class="form-row">小孩名稱<input name="childName" required autocomplete="off"></label>
-            <label class="form-row">密碼找回問題<input name="recoveryQuestion" placeholder="例如：最喜歡的家庭活動"></label>
-            <label class="form-row">密碼找回答案<input name="recoveryAnswer" autocomplete="off"></label>
           </div>
           <div class="button-row">
             <button class="btn good" type="submit">建立帳號</button>
@@ -51,19 +48,6 @@
           <div class="button-row">
             <button class="btn good" type="submit">登入</button>
             <span class="status" id="loginStatus"></span>
-          </div>
-        </form>
-
-        <form id="resetForm" class="auth-form hidden">
-          <div class="form-grid">
-            <label class="form-row">Family Code<input name="familyCode" required autocomplete="off"></label>
-            <label class="form-row">家長名稱<input name="managerName" required></label>
-            <label class="form-row">密碼找回答案<input name="recoveryAnswer" required></label>
-            <label class="form-row">新密碼<input name="newPassword" type="password" required minlength="6"></label>
-          </div>
-          <div class="button-row">
-            <button class="btn warn" type="submit">重設密碼</button>
-            <span class="status" id="resetStatus"></span>
           </div>
         </form>
       </section>

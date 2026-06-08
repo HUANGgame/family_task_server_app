@@ -15,7 +15,7 @@ function setAuthMode(mode) {
   qsa("[data-auth]").forEach((button) => button.classList.toggle("good", button.dataset.auth === mode));
   qsa("[data-auth]").forEach((button) => button.classList.toggle("secondary", button.dataset.auth !== mode));
   qsa(".auth-form").forEach((form) => form.classList.add("hidden"));
-  const formId = mode === "create" ? "#createFamilyForm" : mode === "login" ? "#loginForm" : "#resetForm";
+  const formId = mode === "login" ? "#loginForm" : "#createFamilyForm";
   qs(formId).classList.remove("hidden");
 }
 
@@ -211,18 +211,6 @@ qs("#loginForm").addEventListener("submit", async (event) => {
     sessionStorage.setItem("manager:familyCode", data.familyCode);
     setStatus(status, "");
     await refreshManagerData();
-  } catch (error) {
-    setStatus(status, error.message, true);
-  }
-});
-
-qs("#resetForm").addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const status = qs("#resetStatus");
-  setStatus(status, "更新中...");
-  try {
-    await api("/api/manager/reset-password", { method: "POST", body: formData(event.target) });
-    setStatus(status, "密碼已更新。");
   } catch (error) {
     setStatus(status, error.message, true);
   }
