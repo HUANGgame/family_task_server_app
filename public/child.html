@@ -7,53 +7,64 @@
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
-    <div class="shell">
+    <div class="shell child-mode">
       <header class="topbar">
         <a class="brand" href="/">
           <span class="brand-mark">FT</span>
-          <span>兒童登入</span>
+          <span class="zhuyin-text" data-zhuyin="兒童版"></span>
         </a>
       </header>
 
+      <section class="voice-panel child-global-tools">
+        <label class="voice-toggle">
+          <input type="checkbox" id="voiceModeToggle">
+          <span class="zhuyin-text" data-zhuyin="語音模式"></span>
+        </label>
+        <button class="btn secondary" id="readPageBtn" type="button">念出畫面</button>
+      </section>
+
       <section class="auth-box panel" id="childAuthPanel">
-        <div class="panel-head"><h2>孩子登入</h2></div>
+        <div class="panel-head">
+          <h2 class="zhuyin-text" data-zhuyin="兒童登入"></h2>
+        </div>
         <form id="childLoginForm" class="form-grid">
           <label class="form-row">Family Code<input name="familyCode" required autocomplete="off"></label>
           <label class="form-row">Child Code<input name="childCode" required autocomplete="off"></label>
-          <div class="form-row"><label>&nbsp;</label><button class="btn good" type="submit">登入</button></div>
+          <div class="form-row"><label>&nbsp;</label><button class="btn good voice-readable" type="submit" data-speak="登入">登入</button></div>
         </form>
         <p class="status" id="childLoginStatus"></p>
       </section>
 
       <main class="app-grid hidden" id="childAppPanel">
         <aside class="sidebar">
-          <h2 id="childName">兒童</h2>
-          <p class="muted small">點數</p>
-          <div class="stat"><strong id="childPoints">0</strong></div>
+          <h2 id="childName" class="child-name">兒童</h2>
+          <p class="muted small zhuyin-text" data-zhuyin="點數"></p>
+          <div class="stat child-points"><strong id="childPoints">0</strong></div>
+
           <div class="tabs">
-            <button class="btn tab-btn active" data-tab="tasks">任務</button>
-            <button class="btn tab-btn" data-tab="shop">商店</button>
-            <button class="btn tab-btn" data-tab="fines">扣點紀錄</button>
+            <button class="btn tab-btn active voice-readable" data-tab="tasks" data-speak="任務">任務</button>
+            <button class="btn tab-btn voice-readable" data-tab="shop" data-speak="商店">商店</button>
+            <button class="btn tab-btn voice-readable" data-tab="fines" data-speak="扣點紀錄">扣點紀錄</button>
           </div>
           <div class="danger-zone">
-            <button class="btn danger" id="childClearSessionBtn">清除本機登入</button>
+            <button class="btn danger voice-readable" id="childClearSessionBtn" data-speak="登出">登出</button>
           </div>
         </aside>
 
         <section class="main-stack">
           <div class="panel">
             <div class="panel-head">
-              <h2>今日鼓勵</h2>
-              <button class="btn secondary" id="encourageBtn">重新整理</button>
+              <h2 class="zhuyin-text" data-zhuyin="今日鼓勵"></h2>
+              <button class="btn secondary voice-readable" id="encourageBtn" data-speak="重新整理">重新整理</button>
             </div>
-            <p id="encouragementText" class="muted">-</p>
+            <p id="encouragementText" class="muted child-readable">-</p>
           </div>
 
           <div class="view active" data-view="tasks">
             <div class="panel">
               <div class="panel-head">
-                <h2>任務</h2>
-                <button class="btn secondary" id="refreshChildBtn">重新整理</button>
+                <h2 class="zhuyin-text" data-zhuyin="任務"></h2>
+                <button class="btn secondary voice-readable" id="refreshChildBtn" data-speak="重新整理">重新整理</button>
               </div>
               <div class="list" id="childTasksList"></div>
             </div>
@@ -61,14 +72,14 @@
 
           <div class="view" data-view="shop">
             <div class="panel">
-              <div class="panel-head"><h2>商店</h2></div>
+              <div class="panel-head"><h2 class="zhuyin-text" data-zhuyin="商店"></h2></div>
               <div class="list" id="childShopList"></div>
             </div>
           </div>
 
           <div class="view" data-view="fines">
             <div class="panel">
-              <div class="panel-head"><h2>扣點紀錄</h2></div>
+              <div class="panel-head"><h2 class="zhuyin-text" data-zhuyin="扣點紀錄"></h2></div>
               <div class="list" id="childFinesList"></div>
             </div>
           </div>

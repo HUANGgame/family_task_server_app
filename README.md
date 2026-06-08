@@ -11,6 +11,8 @@ Node.js + Express family task app with static HTML/CSS/JavaScript screens, Supab
 - Child login uses `family_code + child_code`.
 - Manager can create/delete children, assign tasks, require photos, add fines, add shop items, and add encouragement messages.
 - Child can view tasks, upload image proof, finish tasks, earn points, view fines, and redeem shop rewards.
+- Child page includes Bopomofo reading support with ruby annotations shown under Chinese characters.
+- Child page includes a browser-based voice mode for reading the current screen, tasks, shop items, and messages aloud.
 - Server stores all data in Supabase PostgreSQL and photos in Supabase Storage.
 - No `data.json`, no local `public/uploads`, no Python.
 - AI task suggestion is a local demo function named `aiSuggestion()` and does not call any AI API.
