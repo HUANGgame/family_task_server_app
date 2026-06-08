@@ -11,26 +11,18 @@
       <header class="topbar">
         <a class="brand" href="/">
           <span class="brand-mark">FT</span>
-          <span class="zhuyin-text" data-zhuyin="兒童版"></span>
+          <span>兒童版</span>
         </a>
       </header>
 
-      <section class="voice-panel child-global-tools">
-        <label class="voice-toggle">
-          <input type="checkbox" id="voiceModeToggle">
-          <span class="zhuyin-text" data-zhuyin="語音模式"></span>
-        </label>
-        <button class="btn secondary" id="readPageBtn" type="button">念出畫面</button>
-      </section>
-
-      <section class="auth-box panel" id="childAuthPanel">
+      <section class="auth-box panel child-login-panel" id="childAuthPanel">
         <div class="panel-head">
-          <h2 class="zhuyin-text" data-zhuyin="兒童登入"></h2>
+          <h2>兒童登入</h2>
         </div>
         <form id="childLoginForm" class="form-grid">
-          <label class="form-row">Family Code<input name="familyCode" required autocomplete="off"></label>
-          <label class="form-row">媽媽給你的 4 位 Child Code<input name="childCode" required autocomplete="off" maxlength="4" minlength="4" inputmode="text"></label>
-          <div class="form-row"><label>&nbsp;</label><button class="btn good voice-readable" type="submit" data-speak="登入">登入</button></div>
+          <label class="form-row">家庭代碼<input name="familyCode" required autocomplete="off"></label>
+          <label class="form-row">小孩代碼<input name="childCode" required autocomplete="off" maxlength="4" minlength="4" inputmode="text"></label>
+          <div class="form-row"><label>&nbsp;</label><button class="btn good" type="submit">登入</button></div>
         </form>
         <p class="status" id="childLoginStatus"></p>
       </section>
@@ -42,12 +34,12 @@
           <div class="stat child-points"><strong id="childPoints">0</strong></div>
 
           <div class="tabs">
-            <button class="btn tab-btn active voice-readable" data-tab="tasks" data-speak="任務">任務</button>
-            <button class="btn tab-btn voice-readable" data-tab="shop" data-speak="商店">商店</button>
-            <button class="btn tab-btn voice-readable" data-tab="fines" data-speak="扣點紀錄">扣點紀錄</button>
+            <button class="btn tab-btn active" data-tab="tasks">任務</button>
+            <button class="btn tab-btn" data-tab="shop">商店</button>
+            <button class="btn tab-btn" data-tab="fines">扣點紀錄</button>
           </div>
           <div class="danger-zone">
-            <button class="btn danger voice-readable" id="childClearSessionBtn" data-speak="登出">登出</button>
+            <button class="btn danger" id="childClearSessionBtn">登出</button>
           </div>
         </aside>
 
@@ -55,7 +47,7 @@
           <div class="panel">
             <div class="panel-head">
               <h2 class="zhuyin-text" data-zhuyin="今日鼓勵"></h2>
-              <button class="btn secondary voice-readable" id="encourageBtn" data-speak="重新整理">重新整理</button>
+              <button class="btn secondary" id="encourageBtn">重新整理</button>
             </div>
             <p id="encouragementText" class="muted child-readable">-</p>
           </div>
@@ -64,7 +56,7 @@
             <div class="panel">
               <div class="panel-head">
                 <h2 class="zhuyin-text" data-zhuyin="任務"></h2>
-                <button class="btn secondary voice-readable" id="refreshChildBtn" data-speak="重新整理">重新整理</button>
+                <button class="btn secondary" id="refreshChildBtn">重新整理</button>
               </div>
               <div class="list" id="childTasksList"></div>
             </div>

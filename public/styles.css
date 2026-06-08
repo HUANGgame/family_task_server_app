@@ -604,39 +604,16 @@ ruby.zh-char {
   margin-top: 12px;
 }
 
-.voice-panel {
-  display: grid;
-  gap: 10px;
-  margin: 16px 0;
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: white;
-}
-
-.child-global-tools {
-  max-width: 1180px;
-  margin: 0 auto 18px;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-}
-
-.voice-toggle {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--ink);
-  font-size: 16px;
-}
-
-.voice-toggle input {
-  width: 22px;
-  height: 22px;
-  min-height: 22px;
-}
-
 .child-points strong {
   font-size: 34px;
+}
+
+.child-login-panel h2 {
+  font-size: 28px;
+}
+
+.child-login-panel label {
+  font-size: 16px;
 }
 
 .child-account-card {
@@ -687,9 +664,5 @@ ruby.zh-char {
   .item-head {
     align-items: stretch;
     flex-direction: column;
-  }
-
-  .child-global-tools {
-    grid-template-columns: 1fr;
   }
 }
